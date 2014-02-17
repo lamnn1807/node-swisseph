@@ -2,7 +2,7 @@
   "author": "lamnn1807",
   "name": "node-swisseph",
   "description": "Swisseph bindings for Node.js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "http://github.com/lamnn1807/node-swisseph",
   "repository": {
     "url": "http://github.com/lamnn1807/node-swisseph.git"
