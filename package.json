@@ -1,0 +1,28 @@
+{
+  "author": "lamnn1807",
+  "name": "node-swisseph",
+  "description": "Swisseph bindings for Node.js",
+  "version": "0.1.0",
+  "homepage": "http://github.com/lamnn1807/node-swisseph",
+  "repository": {
+    "url": "http://github.com/lamnn1807/node-swisseph.git"
+  },
+  "main": "./lib/swisseph.js",
+  "keywords": [
+    "swisseph",
+    "astrology",
+    "astronomy"
+  ],
+  "dependencies": {
+  	"node-gyp": ">=0.4"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": ">=0.6"
+  },
+  "scripts": {
+    "install": "node-gyp rebuild",
+    "test": "node test/test.js",
+  }
+}
