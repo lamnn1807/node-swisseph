@@ -972,7 +972,7 @@ static int32 eclipse_how( double tjd_ut, int32 ipl, char *starname, int32 ifl,
    * azimuth and altitude of sun or planet
    */
 #if USE_AZ_NAV   /* old */
-  eps = swi_epsiln(te);
+  eps = swi_epsiln(te, iflag);
   if (iflag & SEFLG_NONUT)
     sidt = swe_sidtime0(tjd_ut, eps * RADTODEG, 0) * 15;
   else
@@ -1152,7 +1152,7 @@ int32 FAR PASCAL_CONV swe_sol_eclipse_when_glob(double tjd_start, int32 ifl, int
   double dc[3], dctr;
   double twohr = 2.0 / 24.0;
   double tenmin = 10.0 / 24.0 / 60.0;
-  double dt1, dt2;
+  double dt1 = 0, dt2 = 0;
   double geopos[20], attr[20];
   double dtstart, dtdiv;
   double xa[6], xb[6];
@@ -1527,7 +1527,7 @@ int32 FAR PASCAL_CONV swe_lun_occult_when_glob(
   double dc[20], dctr;
   double twohr = 2.0 / 24.0;
   double tenmin = 10.0 / 24.0 / 60.0;
-  double dt1, dt2, dadd = 10, dadd2 = 6;
+  double dt1 = 0, dt2 = 0, dadd2 = 6;
   int nstartpos = 10;
   double geopos[20];
   double dtstart, dtdiv;
@@ -1563,6 +1563,8 @@ int32 FAR PASCAL_CONV swe_lun_occult_when_glob(
   if (backward)
     direction = -1;
   t = tjd_start - direction * 0.001;
+  tjd_start = t;
+  tjd = t;
 next_try:
   for (i = 0; i < nstartpos; i++, t += direction * dadd2) {
     if (calc_planet_star(t, ipl, starname, iflagcart, xs, serr) == ERR)
@@ -1572,15 +1574,20 @@ next_try:
     dc[i] = acos(swi_dot_prod_unit(xs, xm)) * RADTODEG;
     if (i > 1 && dc[i] > dc[i-1] && dc[i-2] > dc[i-1]) {
       tjd = t - direction * dadd2;
+      t = tjd;
       break;
+    } else if (fabs(tjd - t) > (30 - dadd2 * 0.8)) {
+      t = tjd;
     } else if (i == nstartpos-1) {
       /*for (j = 0; j < nstartpos; j++)
         printf("%f ", dc[j]);*/
       if (serr != NULL) {
-	if (starname != NULL && *starname != '\0')
-	  strcpy(s, starname);
-        else
+	if (starname != NULL && *starname != '\0') {
+	  *s = '\0';
+	  strncat(s, starname, 80);
+        } else {
 	  swe_get_planet_name(ipl , s);
+        }
 	sprintf(serr, "error in swe_lun_occult_when_glob(): conjunction of moon with planet %s not found\n", s);
       }
       return ERR;
@@ -1642,13 +1649,17 @@ next_try:
       tret[0] = tjd;
       return 0;
     }
-    t= tjd + direction * dadd;
+    /*t= tjd + direction * dadd;*/
+    t = tjd + direction * 20;
+    tjd = t;
     goto next_try;
   }
   tret[0] = tjd;
   if ((backward && tret[0] >= tjd_start - 0.0001) 
     || (!backward && tret[0] <= tjd_start + 0.0001)) {
-    t= tjd + direction * dadd;
+    /*t= tjd + direction * dadd;*/
+    t = tjd + direction * 20;
+    tjd = t;
     goto next_try;
   }
   /*
@@ -1667,27 +1678,37 @@ next_try:
    */
   /* non central eclipse is wanted: */
   if (!(ifltype & SE_ECL_NONCENTRAL) && (retflag & SE_ECL_NONCENTRAL)) {
-    t= tjd + direction * dadd;
+    /*t= tjd + direction * dadd;*/
+    t = tjd + direction * 20;
+    tjd = t;
     goto next_try;
   }
   /* central eclipse is wanted: */
   if (!(ifltype & SE_ECL_CENTRAL) && (retflag & SE_ECL_CENTRAL)) {
-    t= tjd + direction * dadd;
+    /*t= tjd + direction * dadd;*/
+    t = tjd + direction * 20;
+    tjd = t;
     goto next_try;
   }
   /* non annular eclipse is wanted: */
   if (!(ifltype & SE_ECL_ANNULAR) && (retflag & SE_ECL_ANNULAR)) {
-    t= tjd + direction * dadd;
+    /*t= tjd + direction * dadd;*/
+    t = tjd + direction * 20;
+    tjd = t;
     goto next_try;
   }
   /* non partial eclipse is wanted: */
   if (!(ifltype & SE_ECL_PARTIAL) && (retflag & SE_ECL_PARTIAL)) {
-    t= tjd + direction * dadd;
+    /*t= tjd + direction * dadd;*/
+    t = tjd + direction * 20;
+    tjd = t;
     goto next_try;
   }
   /* annular-total eclipse will be discovered later */
   if (!(ifltype & (SE_ECL_TOTAL | SE_ECL_ANNULAR_TOTAL)) && (retflag & SE_ECL_TOTAL)) {
-    t= tjd + direction * dadd;
+    /*t= tjd + direction * dadd;*/
+    t = tjd + direction * 20;
+    tjd = t;
     goto next_try;
   }
   if (dont_times)
@@ -1772,12 +1793,16 @@ next_try:
   } 
   /* if eclipse is given but not wanted: */
   if (!(ifltype & SE_ECL_TOTAL) && (retflag & SE_ECL_TOTAL)) {
-    t= tjd + direction * dadd;
+    /*t= tjd + direction * dadd;*/
+    t = tjd + direction * 20;
+    tjd = t;
     goto next_try;
   }
   /* if annular_total eclipse is given but not wanted: */
   if (!(ifltype & SE_ECL_ANNULAR_TOTAL) && (retflag & SE_ECL_ANNULAR_TOTAL)) {
-    t= tjd + direction * dadd;
+    /*t= tjd + direction * dadd;*/
+    t = tjd + direction * 20;
+    tjd = t;
     goto next_try;
   }
   /*
@@ -1897,8 +1922,20 @@ int32 FAR PASCAL_CONV swe_sol_eclipse_when_loc(double tjd_start, int32 ifl,
   return retflag; 
 }
 
-/* Same declaration as swe_sol_eclipse_when_loc().
- * In addition:
+/* When is the next solar eclipse at a given geographical position?
+ * Note the uncertainty of Delta T for the remote past and for
+ * the future.
+ *
+ * retflag	SE_ECL_TOTAL or SE_ECL_ANNULAR or SE_ECL_PARTIAL
+ *              SE_ECL_VISIBLE, 
+ *              SE_ECL_MAX_VISIBLE, 
+ *              SE_ECL_1ST_VISIBLE, SE_ECL_2ND_VISIBLE
+ *              SE_ECL_3ST_VISIBLE, SE_ECL_4ND_VISIBLE
+ *              SE_ECL_OCC_BEG_DAYLIGHT, SE_ECL_OCC_END_DAYLIGHT
+ * The latter two indicate that the beginning or end of the occultation takes
+ * place during the day. If Venus is occulted, it may be observable with the
+ * naked eye; if other objects, it may be observable with telescopes.
+ *
  * int32 ipl          planet number of occulted body
  * char* starname     name of occulted star. Must be NULL or "", if a planetary
  *                    occultation is to be calculated. For the use of this
@@ -1910,6 +1947,8 @@ int32 FAR PASCAL_CONV swe_sol_eclipse_when_loc(double tjd_start, int32 ifl,
  *                    finds one. For bodies with ecliptical latitudes > 5,
  *                    the function may search unsuccessfully until it reaches
  *                    the end of the ephemeris.
+ *
+ * for all other parameters, see function swe_sol_eclipse_when_loc().
  */
 int32 FAR PASCAL_CONV swe_lun_occult_when_loc(double tjd_start, int32 ipl, char *starname, int32 ifl,
      double *geopos, double *tret, double *attr, int32 backward, char *serr)
@@ -1947,7 +1986,7 @@ static int32 eclipse_when_loc(double tjd_start, int32 ifl, double *geopos, doubl
   double tensec = 10.0 / 24.0 / 60.0 / 60.0;
   double twohr = 2.0 / 24.0;
   double tenmin = 10.0 / 24.0 / 60.0;
-  double dt1, dt2, dtdiv, dtstart;
+  double dt1 = 0, dt2 = 0, dtdiv, dtstart;
   int32 iflag = SEFLG_EQUATORIAL | SEFLG_TOPOCTR | ifl;
   int32 iflagcart = iflag | SEFLG_XYZ;
   swe_set_topo(geopos[0], geopos[1], geopos[2]);
@@ -2251,7 +2290,7 @@ static int32 occult_when_loc(
   double tensec = 10.0 / 24.0 / 60.0 / 60.0;
   double twohr = 2.0 / 24.0;
   double tenmin = 10.0 / 24.0 / 60.0;
-  double dt1, dt2, dtdiv, dtstart;
+  double dt1 = 0, dt2 = 0, dtdiv, dtstart;
   double dadd2 = 6;
   int nstartpos = 10;
   double drad;
@@ -2270,6 +2309,7 @@ static int32 occult_when_loc(
   if (backward)
     direction = -1;
   t = tjd_start - direction * 0.1;
+  tjd_start = t;
   tjd = tjd_start;
 next_try:
   for (i = 0; i < nstartpos; i++, t += direction * dadd2) {
@@ -2280,7 +2320,11 @@ next_try:
     dc[i] = acos(swi_dot_prod_unit(xs, xm)) * RADTODEG;
     if (i > 1 && dc[i] > dc[i-1] && dc[i-2] > dc[i-1]) {
       tjd = t - direction*dadd2;
+      t = tjd;
       break;
+    } else if (fabs(tjd - t) > (30 - dadd2 * 0.8)) {
+      t = tjd;
+      break; /* use initial tjd */
     } else if (i == nstartpos-1) {
       for (j = 0; j < nstartpos; j++)
         printf("%f ", dc[j]);
@@ -2322,7 +2366,9 @@ next_try:
         if (one_try) {
           stop_after_this = TRUE;
         } else {
-          t = tjd + direction * 2;
+          /*t = tjd + direction * 2;*/
+          t = tjd + direction * 20;
+          tjd = t;
           goto next_try;
         }
       }
@@ -2356,13 +2402,17 @@ next_try:
       tret[0] = tjd;
       return 0;
     }
-    t = tjd + direction;
+    /*t = tjd + direction;*/
+    t = tjd + direction * 20;
+    tjd = t;
     goto next_try;
   }
   tret[0] = tjd - swe_deltat(tjd);
   if ((backward && tret[0] >= tjd_start - 0.0001) 
     || (!backward && tret[0] <= tjd_start + 0.0001)) {
-      t = tjd + direction;
+    /* t = tjd + direction;*/
+    t = tjd + direction * 20;
+    tjd = t;
     goto next_try;
   }
   if (dctr < rsminusrm)
@@ -2508,7 +2558,9 @@ next_try:
   }
 #if 1
   if (!(retflag & SE_ECL_VISIBLE)) {
-      t = tjd + direction;
+    /* t = tjd + direction;*/
+    t = tjd + direction * 20;
+    tjd = t;
     goto next_try;
   }
 #endif
@@ -2520,6 +2572,18 @@ next_try:
     tret[5] = tjdr;
   if (tjds > tret[1] && tjds < tret[4])
     tret[6] = tjds;
+  if (swe_rise_trans(tret[2], SE_SUN, NULL, iflag, SE_CALC_RISE, geopos, 0, 0, &tjdr, serr) == ERR)
+    return ERR;
+  if (swe_rise_trans(tret[2], SE_SUN, NULL, iflag, SE_CALC_SET, geopos, 0, 0, &tjds, serr) == ERR)
+    return ERR;
+  if (tjds < tjdr)
+    retflag |= SE_ECL_OCC_BEG_DAYLIGHT;
+  if (swe_rise_trans(tret[3], SE_SUN, NULL, iflag, SE_CALC_RISE, geopos, 0, 0, &tjdr, serr) == ERR)
+    return ERR;
+  if (swe_rise_trans(tret[3], SE_SUN, NULL, iflag, SE_CALC_SET, geopos, 0, 0, &tjds, serr) == ERR)
+    return ERR;
+  if (tjds < tjdr)
+    retflag |= SE_ECL_OCC_END_DAYLIGHT;
   return retflag;
 }
 
@@ -2956,6 +3020,7 @@ int32 FAR PASCAL_CONV swe_lun_eclipse_how(
   if (geopos != NULL) 
     geopos[0] = geopos[0]; /* to shut up mint */
   ifl = ifl & ~SEFLG_TOPOCTR;
+  ifl &= ~(SEFLG_JPLHOR | SEFLG_JPLHOR_APPROX);
   retc = lun_eclipse_how(tjd_ut, ifl, attr, dcore, serr);
   if (geopos == NULL)
     return retc;
@@ -3134,7 +3199,7 @@ int32 FAR PASCAL_CONV swe_lun_eclipse_when(double tjd_start, int32 ifl, int32 if
   double dc[3], dctr;
   double twohr = 2.0 / 24.0;
   double tenmin = 10.0 / 24.0 / 60.0;
-  double dt1, dt2;
+  double dt1 = 0, dt2 = 0;
   double kk;
   double attr[20];
   double dtstart, dtdiv;
@@ -3337,6 +3402,108 @@ next_try:
   return retflag;
 }
 
+/* When is the next lunar eclipse, observable at a geographic position?
+ *
+ * retflag	SE_ECL_TOTAL or SE_ECL_PENUMBRAL or SE_ECL_PARTIAL
+ *
+ * tret[0]	time of maximum eclipse
+ * tret[1]	
+ * tret[2]	time of partial phase begin (indices consistent with solar eclipses)
+ * tret[3]	time of partial phase end
+ * tret[4]	time of totality begin
+ * tret[5]	time of totality end
+ * tret[6]	time of penumbral phase begin
+ * tret[7]	time of penumbral phase end
+ * tret[8]	time of moonrise, if it occurs during the eclipse
+ * tret[9]	time of moonset, if it occurs during the eclipse
+ *
+ * attr[0]      umbral magnitude at tjd
+ * attr[1]      penumbral magnitude
+ * attr[4]      azimuth of moon at tjd
+ * attr[5]      true altitude of moon above horizon at tjd
+ * attr[6]      apparent altitude of moon above horizon at tjd
+ * attr[7]      distance of moon from opposition in degrees
+ * attr[8]      umbral magnitude at tjd (= attr[0])
+ * attr[9]      saros series number
+ * attr[10]     saros series member number
+ *         declare as attr[20] at least !
+ */
+int32 FAR PASCAL_CONV swe_lun_eclipse_when_loc(double tjd_start, int32 ifl, 
+     double *geopos, double *tret, double *attr, int32 backward, char *serr)
+{
+  int32 retflag = 0, retflag2 = 0;
+  double tjdr, tjds, tjd_max = 0;
+  int i;
+  ifl &= ~(SEFLG_JPLHOR | SEFLG_JPLHOR_APPROX);
+next_lun_ecl:
+  if ((retflag = swe_lun_eclipse_when(tjd_start, ifl, 0, tret, backward, serr)) == ERR) {
+    return ERR;
+  }
+  /*  
+   * visibility of eclipse phases 
+   */
+  retflag = 0;
+  for (i = 7; i >= 0; i--) {
+    if (i == 1) continue;
+    if (tret[i] == 0) continue;
+    if ((retflag2 = swe_lun_eclipse_how(tret[i], ifl, geopos, attr, serr)) == ERR)
+      return ERR;
+    if (attr[6] > 0) {  /* moon above horizon, using app. alt. */
+      retflag |= SE_ECL_VISIBLE;
+      switch(i) {
+      case 0: retflag |= SE_ECL_MAX_VISIBLE; break;
+      case 2: retflag |= SE_ECL_PARTBEG_VISIBLE; break;
+      case 3: retflag |= SE_ECL_PARTEND_VISIBLE; break;
+      case 4: retflag |= SE_ECL_TOTBEG_VISIBLE; break;
+      case 5: retflag |= SE_ECL_TOTEND_VISIBLE; break;
+      case 6: retflag |= SE_ECL_PENUMBBEG_VISIBLE; break;
+      case 7: retflag |= SE_ECL_PENUMBEND_VISIBLE; break;
+      default:  break;
+      }
+    }
+  }
+  if (!(retflag & SE_ECL_VISIBLE)) {
+    if (backward)
+      tjd_start = tret[0] - 25;
+    else
+      tjd_start = tret[0] + 25;
+    goto next_lun_ecl;
+  }
+  /* moon rise and moon set */
+  if (swe_rise_trans(tret[6] - 0.1, SE_MOON, NULL, ifl, SE_CALC_RISE|SE_BIT_DISC_BOTTOM, geopos, 0, 0, &tjdr, serr) == ERR)
+    return ERR;
+  if (swe_rise_trans(tret[6] - 0.1, SE_MOON, NULL, ifl, SE_CALC_SET|SE_BIT_DISC_BOTTOM, geopos, 0, 0, &tjds, serr) == ERR)
+    return ERR;
+  tjd_max = tret[0];
+  if (tjdr > tret[6] && tjdr < tret[7]) {
+    tret[6] = 0;
+    for (i = 2; i <= 5; i++) {
+      if (tjdr > tret[i]) 
+	tret[i] = 0;
+    }
+    tret[8] = tjdr;
+    if (tjdr > tret[0]) {
+      tjd_max = tjdr;
+    }
+  }
+  if (tjds > tret[6] && tjds < tret[7]) {
+    tret[7] = 0;
+    for (i = 2; i <= 5; i++) {
+      if (tjds < tret[i]) 
+	tret[i] = 0;
+    }
+    tret[9] = tjds;
+    if (tjds < tret[0]) {
+      tjd_max = tjds;
+    }
+  }
+  tret[0] = tjd_max;
+  if ((retflag2 = swe_lun_eclipse_how(tjd_max, ifl, geopos, attr, serr)) == ERR)
+    return ERR;
+  retflag |= (retflag2 & SE_ECL_ALLTYPES_LUNAR);
+  return retflag;
+}
+
 /* 
  * function calculates planetary phenomena
  * 
@@ -3390,6 +3557,7 @@ int32 FAR PASCAL_CONV swe_pheno(double tjd, int32 ipl, int32 iflag, double *attr
   double T, in, om, sinB, u1, u2, du;
   double ph1, ph2, me[2];
   int32 iflagp, epheflag;
+  iflag &= ~(SEFLG_JPLHOR | SEFLG_JPLHOR_APPROX);
   /* function calls for Pluto with asteroid number 134340
    * are treated as calls for Pluto as main body SE_PLUTO */
   if (ipl == SE_AST_OFFSET + 134340)
@@ -3627,8 +3795,8 @@ static int find_zero(double y00, double y11, double y2, double dx,
     return ERR;
   x1 = (-b + sqrt(b * b - 4 * a * c)) / 2 / a;
   x2 = (-b - sqrt(b * b - 4 * a * c)) / 2 / a;
-    *dxret = (x1 - 1) * dx;
-    *dxret2 = (x2 - 1) * dx;
+  *dxret = (x1 - 1) * dx;
+  *dxret2 = (x2 - 1) * dx;
   return OK;
 }
 
@@ -4348,6 +4516,7 @@ int32 FAR PASCAL_CONV swe_nod_aps(double tjd_et, int32 ipl, int32 iflag,
   AS_BOOL do_focal_point = method & SE_NODBIT_FOPOINT;
   AS_BOOL ellipse_is_bary = FALSE;
   int32 iflg0;
+  iflag &= ~(SEFLG_JPLHOR | SEFLG_JPLHOR_APPROX);
   /* function calls for Pluto with asteroid number 134340
    * are treated as calls for Pluto as main body SE_PLUTO */
   if (ipl == SE_AST_OFFSET + 134340)
@@ -4705,9 +4874,9 @@ int32 FAR PASCAL_CONV swe_nod_aps(double tjd_et, int32 ipl, int32 iflag,
     /*********************
      * to J2000 
      *********************/
-    swi_precess(xp, tjd_et, J_TO_J2000);
+    swi_precess(xp, tjd_et, iflag, J_TO_J2000);
     if (iflag & SEFLG_SPEED)
-      swi_precess_speed(xp, tjd_et, J_TO_J2000);
+      swi_precess_speed(xp, tjd_et, iflag, J_TO_J2000);
     /*********************
      * to barycenter 
      *********************/
@@ -4788,9 +4957,9 @@ int32 FAR PASCAL_CONV swe_nod_aps(double tjd_et, int32 ipl, int32 iflag,
     for (j = 0; j <= 5; j++)
       x2000[j] = xp[j];
     if (!(iflag & SEFLG_J2000)) {
-      swi_precess(xp, tjd_et, J2000_TO_J);
+      swi_precess(xp, tjd_et, iflag, J2000_TO_J);
       if (iflag & SEFLG_SPEED)
-        swi_precess_speed(xp, tjd_et, J2000_TO_J);
+        swi_precess_speed(xp, tjd_et, iflag, J2000_TO_J);
     }
     /*********************
      * nutation           
@@ -4940,8 +5109,8 @@ int32 FAR PASCAL_CONV swe_gauquelin_sector(double t_ut, int32 ipl, char *starnam
    */
   if (imeth == 0 || imeth == 1) {
     t_et = t_ut + swe_deltat(t_ut);
-    eps = swi_epsiln(t_et) * RADTODEG;
-    swi_nutation(t_et, nutlo);
+    eps = swi_epsiln(t_et, iflag) * RADTODEG;
+    swi_nutation(t_et, iflag, nutlo);
     nutlo[0] *= RADTODEG;
     nutlo[1] *= RADTODEG;
     armc = swe_degnorm(swe_sidtime0(t_ut, eps + nutlo[1], nutlo[0]) * 15 + geopos[0]);

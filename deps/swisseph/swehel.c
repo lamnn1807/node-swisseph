@@ -2725,7 +2725,7 @@ static int32 get_heliacal_day(double tjd, double *dgeo, double *datm, double *do
   tfac = 1;
   switch (ipl) {
     case SE_MOON: 
-      ndays = 6; 
+      ndays = 16; 
       daystep = 1;
       break;
     case SE_MERCURY: 
@@ -3314,6 +3314,9 @@ static int32 heliacal_ut(double JDNDaysUTStart, double *dgeo, double *datm, doub
 '                   3 evening first
 '                   4 morning last
 ' dret		    output: time (tjd_ut) of heliacal event
+'                   dret[0]: beginning of visibility (Julian day number)
+'                   dret[1]: optimum visibility (Julian day number; 0 if SE_HELFLAG_AV)
+'                   dret[2]: end of visibility (Julian day number; 0 if SE_HELFLAG_AV)
 ' see http://www.iol.ie/~geniet/eng/atmoastroextinction.htm
 */
 int32 FAR PASCAL_CONV swe_heliacal_ut(double JDNDaysUTStart, double *dgeo, double *datm, double *dobs, char *ObjectNameIn, int32 TypeEvent, int32 helflag, double *dret, char *serr_ret)
@@ -3341,8 +3344,9 @@ int32 FAR PASCAL_CONV swe_heliacal_ut(double JDNDaysUTStart, double *dgeo, doubl
    */
   if (Planet == SE_MOON) {
     if (TypeEvent == 1 || TypeEvent == 2) {
-      if (serr_ret != NULL)
+      if (serr_ret != NULL) {
         sprintf(serr_ret, "%s (event type %d) does not exist for the moon\n", sevent[TypeEvent], TypeEvent);
+      }
       return ERR;
     }
     tjd = tjd0;
