@@ -50,3 +50,6 @@ swisseph.julday(date.year, date.month, date.day, date.hour, swisseph.GREG_CAL, f
 ##API
 
 http://pythonhosted.org/pyswisseph/
+
+##License
+GNU public license version 2 or later
