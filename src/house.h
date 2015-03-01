@@ -22,7 +22,7 @@ using namespace v8;
  *   error: string
  * }
  */
-Handle <Value> node_swe_houses (const Arguments & args);
+NAN_METHOD(node_swe_houses);
 
 /**
  * int swe_houses_ex(double tjd_ut, int32 iflag, double geolat, double geolon, int hsys, double *cusps, double *ascmc)
@@ -40,7 +40,7 @@ Handle <Value> node_swe_houses (const Arguments & args);
  *   error: string
  * }
  */
-Handle <Value> node_swe_houses_ex (const Arguments & args);
+NAN_METHOD(node_swe_houses_ex);
 
 /**
  * int swe_houses_armc(double armc, double geolat, double eps, int hsys, double *cusps, double *ascmc)
@@ -58,7 +58,7 @@ Handle <Value> node_swe_houses_ex (const Arguments & args);
  *   error: string
  * }
  */
-Handle <Value> node_swe_houses_armc (const Arguments & args);
+NAN_METHOD(node_swe_houses_armc);
 
 /**
  * double swe_house_pos(double armc, double geolat, double eps, int hsys, double *xpin, char *serr)
@@ -68,6 +68,6 @@ Handle <Value> node_swe_houses_armc (const Arguments & args);
  *   error: string
  * }
  */
-Handle <Value> node_swe_houses_pos (const Arguments & args);
+NAN_METHOD(node_swe_houses_pos);
 
 #endif // __swisseph_house_h__

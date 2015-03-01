@@ -12,12 +12,11 @@ using namespace v8;
  *   error: string
  * }
  */
-Handle <Value> node_swe_date_conversion (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_date_conversion) {
+	NanScope();
 
 	if (args.Length () < 5) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -27,33 +26,31 @@ Handle <Value> node_swe_date_conversion (const Arguments & args) {
 		!args [3]->IsNumber () ||
 		(!args [4]->IsString () && args [4]->ToString ()->Length () > 0)
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double tjd;
 	int rflag;
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	rflag = ::swe_date_conversion (
 		(int)args [0]->NumberValue (),
 		(int)args [1]->NumberValue (),
 		(int)args [2]->NumberValue (),
 		args [3]->NumberValue (),
-		(* String::AsciiValue (args [4]->ToString ())) [0],
+		(* NanAsciiString (args [4]->ToString ())) [0],
 		&tjd
 	);
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New ("Input date is illegal."));
+		result->Set (NanNew<String> ("error"), NanNew<String> ("Input date is illegal."));
 	} else {
-		result->Set (String::NewSymbol ("julianDay"), Number::New (tjd));
+		result->Set (NanNew<String> ("julianDay"), NanNew<Number> (tjd));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -61,12 +58,11 @@ Handle <Value> node_swe_date_conversion (const Arguments & args) {
  * =>
  * swe_julday(int year, int month, int day, double hour, int gregflag[, function callback (result)])
  */
-Handle <Value> node_swe_julday (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_julday) {
+	NanScope();
 
 	if (args.Length () < 5) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -76,11 +72,10 @@ Handle <Value> node_swe_julday (const Arguments & args) {
 		!args [3]->IsNumber () ||
 		!args [4]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
-	Local <Number> result = Number::New (::swe_julday (
+	Local <Number> result = NanNew<Number> (::swe_julday (
 		(int)args [0]->NumberValue (),
 		(int)args [1]->NumberValue (),
 		(int)args [2]->NumberValue (),
@@ -89,8 +84,7 @@ Handle <Value> node_swe_julday (const Arguments & args) {
 	));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -103,26 +97,24 @@ Handle <Value> node_swe_julday (const Arguments & args) {
  *   hour: double
  * }
  */
-Handle <Value> node_swe_revjul (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_revjul) {
+	NanScope();
 
 	if (args.Length () < 2) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber () ||
 		!args [1]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double hour;
 	int year, month, day;
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	::swe_revjul (
 		args [0]->NumberValue (),
@@ -130,14 +122,13 @@ Handle <Value> node_swe_revjul (const Arguments & args) {
 		&year, &month, &day, &hour
 	);
 
-	result->Set (String::NewSymbol ("year"), Number::New (year));
-	result->Set (String::NewSymbol ("month"), Number::New (month));
-	result->Set (String::NewSymbol ("day"), Number::New (day));
-	result->Set (String::NewSymbol ("hour"), Number::New (hour));
+	result->Set (NanNew<String> ("year"), NanNew<Number> (year));
+	result->Set (NanNew<String> ("month"), NanNew<Number> (month));
+	result->Set (NanNew<String> ("day"), NanNew<Number> (day));
+	result->Set (NanNew<String> ("hour"), NanNew<Number> (hour));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -149,12 +140,11 @@ Handle <Value> node_swe_revjul (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_utc_to_jd (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_utc_to_jd) {
+	NanScope();
 
 	if (args.Length () < 7) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -166,15 +156,14 @@ Handle <Value> node_swe_utc_to_jd (const Arguments & args) {
 		!args [5]->IsNumber () ||
 		!args [6]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double tjd [2];
 	char serr [AS_MAXCH];
 	int rflag;
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	rflag = ::swe_utc_to_jd (
 		(int)args [0]->NumberValue (),
@@ -188,15 +177,14 @@ Handle <Value> node_swe_utc_to_jd (const Arguments & args) {
 	);
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("julianDayUT"), Number::New (tjd [0]));
-		result->Set (String::NewSymbol ("julianDayET"), Number::New (tjd [1]));
+		result->Set (NanNew<String> ("julianDayUT"), NanNew<Number> (tjd [0]));
+		result->Set (NanNew<String> ("julianDayET"), NanNew<Number> (tjd [1]));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -211,26 +199,24 @@ Handle <Value> node_swe_utc_to_jd (const Arguments & args) {
  *   second: double
  * }
  */
-Handle <Value> node_swe_jdet_to_utc (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_jdet_to_utc) {
+	NanScope();
 
 	if (args.Length () < 2) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber () ||
 		!args [1]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double second;
 	int year, month, day, hour, minute;
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	::swe_jdet_to_utc (
 		args [0]->NumberValue (),
@@ -238,16 +224,15 @@ Handle <Value> node_swe_jdet_to_utc (const Arguments & args) {
 		&year, &month, &day, &hour, &minute, &second
 	);
 
-	result->Set (String::NewSymbol ("year"), Number::New (year));
-	result->Set (String::NewSymbol ("month"), Number::New (month));
-	result->Set (String::NewSymbol ("day"), Number::New (day));
-	result->Set (String::NewSymbol ("hour"), Number::New (hour));
-	result->Set (String::NewSymbol ("minute"), Number::New (minute));
-	result->Set (String::NewSymbol ("second"), Number::New (second));
+	result->Set (NanNew<String> ("year"), NanNew<Number> (year));
+	result->Set (NanNew<String> ("month"), NanNew<Number> (month));
+	result->Set (NanNew<String> ("day"), NanNew<Number> (day));
+	result->Set (NanNew<String> ("hour"), NanNew<Number> (hour));
+	result->Set (NanNew<String> ("minute"), NanNew<Number> (minute));
+	result->Set (NanNew<String> ("second"), NanNew<Number> (second));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -262,26 +247,24 @@ Handle <Value> node_swe_jdet_to_utc (const Arguments & args) {
  *   second: double
  * }
  */
-Handle <Value> node_swe_jdut1_to_utc (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_jdut1_to_utc) {
+	NanScope();
 
 	if (args.Length () < 2) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber () ||
 		!args [1]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double second;
 	int year, month, day, hour, minute;
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	::swe_jdut1_to_utc (
 		args [0]->NumberValue (),
@@ -289,16 +272,15 @@ Handle <Value> node_swe_jdut1_to_utc (const Arguments & args) {
 		&year, &month, &day, &hour, &minute, &second
 	);
 
-	result->Set (String::NewSymbol ("year"), Number::New (year));
-	result->Set (String::NewSymbol ("month"), Number::New (month));
-	result->Set (String::NewSymbol ("day"), Number::New (day));
-	result->Set (String::NewSymbol ("hour"), Number::New (hour));
-	result->Set (String::NewSymbol ("minute"), Number::New (minute));
-	result->Set (String::NewSymbol ("second"), Number::New (second));
+	result->Set (NanNew<String> ("year"), NanNew<Number> (year));
+	result->Set (NanNew<String> ("month"), NanNew<Number> (month));
+	result->Set (NanNew<String> ("day"), NanNew<Number> (day));
+	result->Set (NanNew<String> ("hour"), NanNew<Number> (hour));
+	result->Set (NanNew<String> ("minute"), NanNew<Number> (minute));
+	result->Set (NanNew<String> ("second"), NanNew<Number> (second));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -313,12 +295,11 @@ Handle <Value> node_swe_jdut1_to_utc (const Arguments & args) {
  *   second: double
  * }
  */
-Handle <Value> node_swe_utc_time_zone (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_utc_time_zone) {
+	NanScope();
 
 	if (args.Length () < 7) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -330,14 +311,13 @@ Handle <Value> node_swe_utc_time_zone (const Arguments & args) {
 		!args [5]->IsNumber () ||
 		!args [6]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double second;
 	int year, month, day, hour, minute;
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	::swe_utc_time_zone (
 		(int)args [0]->NumberValue (),
@@ -350,14 +330,13 @@ Handle <Value> node_swe_utc_time_zone (const Arguments & args) {
 		&year, &month, &day, &hour, &minute, &second
 	);
 
-	result->Set (String::NewSymbol ("year"), Number::New (year));
-	result->Set (String::NewSymbol ("month"), Number::New (month));
-	result->Set (String::NewSymbol ("day"), Number::New (day));
-	result->Set (String::NewSymbol ("hour"), Number::New (hour));
-	result->Set (String::NewSymbol ("minute"), Number::New (minute));
-	result->Set (String::NewSymbol ("second"), Number::New (second));
+	result->Set (NanNew<String> ("year"), NanNew<Number> (year));
+	result->Set (NanNew<String> ("month"), NanNew<Number> (month));
+	result->Set (NanNew<String> ("day"), NanNew<Number> (day));
+	result->Set (NanNew<String> ("hour"), NanNew<Number> (hour));
+	result->Set (NanNew<String> ("minute"), NanNew<Number> (minute));
+	result->Set (NanNew<String> ("second"), NanNew<Number> (second));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };

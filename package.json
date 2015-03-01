@@ -14,7 +14,8 @@
     "astronomy"
   ],
   "dependencies": {
-  	"node-gyp": ">=0.4"
+    "nan": "^1.7.0",
+    "node-gyp": ">=0.4"
   },
   "devDependencies": {},
   "optionalDependencies": {},

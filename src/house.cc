@@ -20,12 +20,11 @@ using namespace v8;
  *   error: string
  * }
  */
-Handle <Value> node_swe_houses (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_houses) {
+	NanScope();
 
 	if (args.Length () < 4) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -34,46 +33,44 @@ Handle <Value> node_swe_houses (const Arguments & args) {
 		!args [2]->IsNumber () ||
 		!args [3]->IsString ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double cusps [20] = {0};
 	double ascmc [40] = {0};
 	int rflag;
 
-	Local <Object> result = Object::New ();
-	Local <Array> house = Array::New ();
+	Local <Object> result = NanNew<Object> ();
+	Local <Array> house = NanNew<Array> ();
 
 	rflag = ::swe_houses (
 		args [0]->NumberValue (),
 		args [1]->NumberValue (),
 		args [2]->NumberValue (),
-		(* String::AsciiValue (args [3]->ToString ())) [0],
+		(* NanAsciiString (args [3]->ToString ())) [0],
 		cusps, ascmc
 	);
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New ("Can't calculate houses."));
+		result->Set (NanNew<String> ("error"), NanNew<String> ("Can't calculate houses."));
 	} else {
 		for (size_t i = 0; i < 12; i ++) {
-			house->Set (Number::New (i), Number::New (cusps [i + 1]));
+			house->Set (NanNew<Number> (i), NanNew<Number> (cusps [i + 1]));
 		};
 
-		result->Set (String::NewSymbol ("house"), house);
-		result->Set (String::NewSymbol ("ascendant"), Number::New (ascmc [SE_ASC]));
-		result->Set (String::NewSymbol ("mc"), Number::New (ascmc [SE_MC]));
-		result->Set (String::NewSymbol ("armc"), Number::New (ascmc [SE_ARMC]));
-		result->Set (String::NewSymbol ("vertex"), Number::New (ascmc [SE_VERTEX]));
-		result->Set (String::NewSymbol ("equatorialAscendant"), Number::New (ascmc [SE_COASC1]));
-		result->Set (String::NewSymbol ("kochCoAscendant"), Number::New (ascmc [SE_COASC2]));
-		result->Set (String::NewSymbol ("munkaseyCoAscendant"), Number::New (ascmc [SE_POLASC]));
-		result->Set (String::NewSymbol ("munkaseyPolarAscendant"), Number::New (ascmc [SE_NASCMC]));
+		result->Set (NanNew<String> ("house"), house);
+		result->Set (NanNew<String> ("ascendant"), NanNew<Number> (ascmc [SE_ASC]));
+		result->Set (NanNew<String> ("mc"), NanNew<Number> (ascmc [SE_MC]));
+		result->Set (NanNew<String> ("armc"), NanNew<Number> (ascmc [SE_ARMC]));
+		result->Set (NanNew<String> ("vertex"), NanNew<Number> (ascmc [SE_VERTEX]));
+		result->Set (NanNew<String> ("equatorialAscendant"), NanNew<Number> (ascmc [SE_COASC1]));
+		result->Set (NanNew<String> ("kochCoAscendant"), NanNew<Number> (ascmc [SE_COASC2]));
+		result->Set (NanNew<String> ("munkaseyCoAscendant"), NanNew<Number> (ascmc [SE_POLASC]));
+		result->Set (NanNew<String> ("munkaseyPolarAscendant"), NanNew<Number> (ascmc [SE_NASCMC]));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -92,12 +89,11 @@ Handle <Value> node_swe_houses (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_houses_ex (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_houses_ex) {
+	NanScope();
 
 	if (args.Length () < 5) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -107,47 +103,45 @@ Handle <Value> node_swe_houses_ex (const Arguments & args) {
 		!args [3]->IsNumber () ||
 		!args [4]->IsString ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double cusps [20] = {0};
 	double ascmc [40] = {0};
 	int rflag;
 
-	Local <Object> result = Object::New ();
-	Local <Array> house = Array::New ();
+	Local <Object> result = NanNew<Object> ();
+	Local <Array> house = NanNew<Array> ();
 
 	rflag = ::swe_houses_ex (
 		args [0]->NumberValue (),
 		(int)args [1]->NumberValue (),
 		args [2]->NumberValue (),
 		args [3]->NumberValue (),
-		(* String::AsciiValue (args [4]->ToString ())) [0],
+		(* NanAsciiString (args [4]->ToString ())) [0],
 		cusps, ascmc
 	);
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New ("Can't calculate houses."));
+		result->Set (NanNew<String> ("error"), NanNew<String> ("Can't calculate houses."));
 	} else {
 		for (size_t i = 0; i < 12; i ++) {
-			house->Set (Number::New (i), Number::New (cusps [i + 1]));
+			house->Set (NanNew<Number> (i), NanNew<Number> (cusps [i + 1]));
 		};
 
-		result->Set (String::NewSymbol ("house"), house);
-		result->Set (String::NewSymbol ("ascendant"), Number::New (ascmc [SE_ASC]));
-		result->Set (String::NewSymbol ("mc"), Number::New (ascmc [SE_MC]));
-		result->Set (String::NewSymbol ("armc"), Number::New (ascmc [SE_ARMC]));
-		result->Set (String::NewSymbol ("vertex"), Number::New (ascmc [SE_VERTEX]));
-		result->Set (String::NewSymbol ("equatorialAscendant"), Number::New (ascmc [SE_COASC1]));
-		result->Set (String::NewSymbol ("kochCoAscendant"), Number::New (ascmc [SE_COASC2]));
-		result->Set (String::NewSymbol ("munkaseyCoAscendant"), Number::New (ascmc [SE_POLASC]));
-		result->Set (String::NewSymbol ("munkaseyPolarAscendant"), Number::New (ascmc [SE_NASCMC]));
+		result->Set (NanNew<String> ("house"), house);
+		result->Set (NanNew<String> ("ascendant"), NanNew<Number> (ascmc [SE_ASC]));
+		result->Set (NanNew<String> ("mc"), NanNew<Number> (ascmc [SE_MC]));
+		result->Set (NanNew<String> ("armc"), NanNew<Number> (ascmc [SE_ARMC]));
+		result->Set (NanNew<String> ("vertex"), NanNew<Number> (ascmc [SE_VERTEX]));
+		result->Set (NanNew<String> ("equatorialAscendant"), NanNew<Number> (ascmc [SE_COASC1]));
+		result->Set (NanNew<String> ("kochCoAscendant"), NanNew<Number> (ascmc [SE_COASC2]));
+		result->Set (NanNew<String> ("munkaseyCoAscendant"), NanNew<Number> (ascmc [SE_POLASC]));
+		result->Set (NanNew<String> ("munkaseyPolarAscendant"), NanNew<Number> (ascmc [SE_NASCMC]));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -166,12 +160,11 @@ Handle <Value> node_swe_houses_ex (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_houses_armc (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_houses_armc) {
+	NanScope();
 
 	if (args.Length () < 4) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -180,46 +173,44 @@ Handle <Value> node_swe_houses_armc (const Arguments & args) {
 		!args [2]->IsNumber () ||
 		!args [3]->IsString ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double cusps [20] = {0};
 	double ascmc [40] = {0};
 	int rflag;
 
-	Local <Object> result = Object::New ();
-	Local <Array> house = Array::New ();
+	Local <Object> result = NanNew<Object> ();
+	Local <Array> house = NanNew<Array> ();
 
 	rflag = ::swe_houses (
 		args [0]->NumberValue (),
 		args [1]->NumberValue (),
 		args [2]->NumberValue (),
-		(* String::AsciiValue (args [3]->ToString ())) [0],
+		(* NanAsciiString (args [3]->ToString ())) [0],
 		cusps, ascmc
 	);
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New ("Can't calculate houses."));
+		result->Set (NanNew<String> ("error"), NanNew<String> ("Can't calculate houses."));
 	} else {
 		for (size_t i = 0; i < 12; i ++) {
-			house->Set (Number::New (i), Number::New (cusps [i + 1]));
+			house->Set (NanNew<Number> (i), NanNew<Number> (cusps [i + 1]));
 		};
 
-		result->Set (String::NewSymbol ("house"), house);
-		result->Set (String::NewSymbol ("ascendant"), Number::New (ascmc [SE_ASC]));
-		result->Set (String::NewSymbol ("mc"), Number::New (ascmc [SE_MC]));
-		result->Set (String::NewSymbol ("armc"), Number::New (ascmc [SE_ARMC]));
-		result->Set (String::NewSymbol ("vertex"), Number::New (ascmc [SE_VERTEX]));
-		result->Set (String::NewSymbol ("equatorialAscendant"), Number::New (ascmc [SE_COASC1]));
-		result->Set (String::NewSymbol ("kochCoAscendant"), Number::New (ascmc [SE_COASC2]));
-		result->Set (String::NewSymbol ("munkaseyCoAscendant"), Number::New (ascmc [SE_POLASC]));
-		result->Set (String::NewSymbol ("munkaseyPolarAscendant"), Number::New (ascmc [SE_NASCMC]));
+		result->Set (NanNew<String> ("house"), house);
+		result->Set (NanNew<String> ("ascendant"), NanNew<Number> (ascmc [SE_ASC]));
+		result->Set (NanNew<String> ("mc"), NanNew<Number> (ascmc [SE_MC]));
+		result->Set (NanNew<String> ("armc"), NanNew<Number> (ascmc [SE_ARMC]));
+		result->Set (NanNew<String> ("vertex"), NanNew<Number> (ascmc [SE_VERTEX]));
+		result->Set (NanNew<String> ("equatorialAscendant"), NanNew<Number> (ascmc [SE_COASC1]));
+		result->Set (NanNew<String> ("kochCoAscendant"), NanNew<Number> (ascmc [SE_COASC2]));
+		result->Set (NanNew<String> ("munkaseyCoAscendant"), NanNew<Number> (ascmc [SE_POLASC]));
+		result->Set (NanNew<String> ("munkaseyPolarAscendant"), NanNew<Number> (ascmc [SE_NASCMC]));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -230,12 +221,11 @@ Handle <Value> node_swe_houses_armc (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_houses_pos (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_houses_pos) {
+	NanScope();
 
 	if (args.Length () < 6) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -246,8 +236,7 @@ Handle <Value> node_swe_houses_pos (const Arguments & args) {
 		!args [4]->IsNumber () ||
 		!args [5]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double cusps [20] = {0};
@@ -256,24 +245,23 @@ Handle <Value> node_swe_houses_pos (const Arguments & args) {
 	char serr [AS_MAXCH];
 	double rflag;
 
-	Local <Object> result = Object::New ();
-	Local <Array> house = Array::New ();
+	Local <Object> result = NanNew<Object> ();
+	Local <Array> house = NanNew<Array> ();
 
 	rflag = ::swe_house_pos (
 		args [0]->NumberValue (),
 		args [1]->NumberValue (),
 		args [2]->NumberValue (),
-		(* String::AsciiValue (args [3]->ToString ())) [0],
+		(* NanAsciiString (args [3]->ToString ())) [0],
 		xpin, serr
 	);
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New ("Can't calculate houses."));
+		result->Set (NanNew<String> ("error"), NanNew<String> ("Can't calculate houses."));
 	} else {
-		result->Set (String::NewSymbol ("housePosition"), Number::New (rflag));
+		result->Set (NanNew<String> ("housePosition"), NanNew<Number> (rflag));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };

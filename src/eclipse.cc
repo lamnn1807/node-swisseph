@@ -13,12 +13,11 @@ using namespace v8;
  *   error: string
  * }
  */
-Handle <Value> node_swe_gauquelin_sector (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_gauquelin_sector) {
+	NanScope();
 
 	if (args.Length () < 10) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -33,8 +32,7 @@ Handle <Value> node_swe_gauquelin_sector (const Arguments & args) {
 		!args [8]->IsNumber () ||
 		!args [9]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double geopos [10] = {0};
@@ -43,7 +41,7 @@ Handle <Value> node_swe_gauquelin_sector (const Arguments & args) {
 	char serr [AS_MAXCH];
 	long rflag;
 
-	::strcpy (star, * String::AsciiValue (args [2]->ToString ()));
+	::strcpy (star, * NanAsciiString (args [2]->ToString ()));
 
 	geopos [0] = args [5]->NumberValue ();
 	geopos [1] = args [6]->NumberValue ();
@@ -61,18 +59,17 @@ Handle <Value> node_swe_gauquelin_sector (const Arguments & args) {
 		&dgsect, serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("name"), String::New (star));
-		result->Set (String::NewSymbol ("gauquelinSector"), Number::New (dgsect));
+		result->Set (NanNew<String> ("name"), NanNew<String> (star));
+		result->Set (NanNew<String> ("gauquelinSector"), NanNew<Number> (dgsect));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -95,20 +92,18 @@ Handle <Value> node_swe_gauquelin_sector (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_sol_eclipse_where (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_sol_eclipse_where) {
+	NanScope();
 
 	if (args.Length () < 2) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber () ||
 		!args [1]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double geopos [10] = {0};
@@ -122,29 +117,28 @@ Handle <Value> node_swe_sol_eclipse_where (const Arguments & args) {
 		geopos, attr, serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("longitude"),	Number::New (geopos [0]));
-		result->Set (String::NewSymbol ("latitude"),	Number::New (geopos [1]));
-		result->Set (String::NewSymbol ("solarDiameterFraction"),		Number::New (attr [0]));
-		result->Set (String::NewSymbol ("lonarToSolarDiameterRatio"),	Number::New (attr [1]));
-		result->Set (String::NewSymbol ("solarDiscFraction"),			Number::New (attr [2]));
-		result->Set (String::NewSymbol ("coreShadow"),					Number::New (attr [3]));
-		result->Set (String::NewSymbol ("azimuth"),						Number::New (attr [4]));
-		result->Set (String::NewSymbol ("trueAltitude"),				Number::New (attr [5]));
-		result->Set (String::NewSymbol ("apparentAltitude"),			Number::New (attr [6]));
-		result->Set (String::NewSymbol ("moonToSunAngularDistance"),	Number::New (attr [7]));
-		result->Set (String::NewSymbol ("eclipseMagnitude"),			Number::New (attr [8]));
-		result->Set (String::NewSymbol ("sarosNumber"),					Number::New (attr [9]));
-		result->Set (String::NewSymbol ("sarosMember"),					Number::New (attr [10]));
+		result->Set (NanNew<String> ("longitude"),	NanNew<Number> (geopos [0]));
+		result->Set (NanNew<String> ("latitude"),	NanNew<Number> (geopos [1]));
+		result->Set (NanNew<String> ("solarDiameterFraction"),		NanNew<Number> (attr [0]));
+		result->Set (NanNew<String> ("lonarToSolarDiameterRatio"),	NanNew<Number> (attr [1]));
+		result->Set (NanNew<String> ("solarDiscFraction"),			NanNew<Number> (attr [2]));
+		result->Set (NanNew<String> ("coreShadow"),					NanNew<Number> (attr [3]));
+		result->Set (NanNew<String> ("azimuth"),						NanNew<Number> (attr [4]));
+		result->Set (NanNew<String> ("trueAltitude"),				NanNew<Number> (attr [5]));
+		result->Set (NanNew<String> ("apparentAltitude"),			NanNew<Number> (attr [6]));
+		result->Set (NanNew<String> ("moonToSunAngularDistance"),	NanNew<Number> (attr [7]));
+		result->Set (NanNew<String> ("eclipseMagnitude"),			NanNew<Number> (attr [8]));
+		result->Set (NanNew<String> ("sarosNumber"),					NanNew<Number> (attr [9]));
+		result->Set (NanNew<String> ("sarosMember"),					NanNew<Number> (attr [10]));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -164,12 +158,11 @@ Handle <Value> node_swe_sol_eclipse_where (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_lun_occult_where (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_lun_occult_where) {
+	NanScope();
 
 	if (args.Length () < 4) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -178,8 +171,7 @@ Handle <Value> node_swe_lun_occult_where (const Arguments & args) {
 		!args [2]->IsString () ||
 		!args [3]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double geopos [10] = {0};
@@ -188,7 +180,7 @@ Handle <Value> node_swe_lun_occult_where (const Arguments & args) {
 	char serr [AS_MAXCH];
 	long rflag;
 
-	::strcpy (star, * String::AsciiValue (args [2]->ToString ()));
+	::strcpy (star, * NanAsciiString (args [2]->ToString ()));
 
 	rflag = ::swe_lun_occult_where (
 		args [0]->NumberValue (),
@@ -198,26 +190,25 @@ Handle <Value> node_swe_lun_occult_where (const Arguments & args) {
 		geopos, attr, serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("longitude"),	Number::New (geopos [0]));
-		result->Set (String::NewSymbol ("latitude"),	Number::New (geopos [1]));
-		result->Set (String::NewSymbol ("solarDiameterFraction"),		Number::New (attr [0]));
-		result->Set (String::NewSymbol ("lonarToSolarDiameterRatio"),	Number::New (attr [1]));
-		result->Set (String::NewSymbol ("solarDiscFraction"),			Number::New (attr [2]));
-		result->Set (String::NewSymbol ("coreShadow"),					Number::New (attr [3]));
-		result->Set (String::NewSymbol ("azimuth"),						Number::New (attr [4]));
-		result->Set (String::NewSymbol ("trueAltitude"),				Number::New (attr [5]));
-		result->Set (String::NewSymbol ("apparentAltitude"),			Number::New (attr [6]));
-		result->Set (String::NewSymbol ("moonToSunAngularDistance"),	Number::New (attr [7]));
+		result->Set (NanNew<String> ("longitude"),	NanNew<Number> (geopos [0]));
+		result->Set (NanNew<String> ("latitude"),	NanNew<Number> (geopos [1]));
+		result->Set (NanNew<String> ("solarDiameterFraction"),		NanNew<Number> (attr [0]));
+		result->Set (NanNew<String> ("lonarToSolarDiameterRatio"),	NanNew<Number> (attr [1]));
+		result->Set (NanNew<String> ("solarDiscFraction"),			NanNew<Number> (attr [2]));
+		result->Set (NanNew<String> ("coreShadow"),					NanNew<Number> (attr [3]));
+		result->Set (NanNew<String> ("azimuth"),						NanNew<Number> (attr [4]));
+		result->Set (NanNew<String> ("trueAltitude"),				NanNew<Number> (attr [5]));
+		result->Set (NanNew<String> ("apparentAltitude"),			NanNew<Number> (attr [6]));
+		result->Set (NanNew<String> ("moonToSunAngularDistance"),	NanNew<Number> (attr [7]));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -238,12 +229,11 @@ Handle <Value> node_swe_lun_occult_where (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_sol_eclipse_how (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_sol_eclipse_how) {
+	NanScope();
 
 	if (args.Length () < 5) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -253,8 +243,7 @@ Handle <Value> node_swe_sol_eclipse_how (const Arguments & args) {
 		!args [3]->IsNumber () ||
 		!args [4]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double geopos [10] = {0};
@@ -272,27 +261,26 @@ Handle <Value> node_swe_sol_eclipse_how (const Arguments & args) {
 		geopos, attr, serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("solarDiameterFraction"),		Number::New (attr [0]));
-		result->Set (String::NewSymbol ("lonarToSolarDiameterRatio"),	Number::New (attr [1]));
-		result->Set (String::NewSymbol ("solarDiscFraction"),			Number::New (attr [2]));
-		result->Set (String::NewSymbol ("coreShadow"),					Number::New (attr [3]));
-		result->Set (String::NewSymbol ("azimuth"),						Number::New (attr [4]));
-		result->Set (String::NewSymbol ("trueAltitude"),				Number::New (attr [5]));
-		result->Set (String::NewSymbol ("apparentAltitude"),			Number::New (attr [6]));
-		result->Set (String::NewSymbol ("moonToSunAngularDistance"),	Number::New (attr [7]));
-		result->Set (String::NewSymbol ("eclipseMagnitude"),			Number::New (attr [8]));
-		result->Set (String::NewSymbol ("sarosNumber"),					Number::New (attr [9]));
-		result->Set (String::NewSymbol ("sarosMember"),					Number::New (attr [10]));
+		result->Set (NanNew<String> ("solarDiameterFraction"),		NanNew<Number> (attr [0]));
+		result->Set (NanNew<String> ("lonarToSolarDiameterRatio"),	NanNew<Number> (attr [1]));
+		result->Set (NanNew<String> ("solarDiscFraction"),			NanNew<Number> (attr [2]));
+		result->Set (NanNew<String> ("coreShadow"),					NanNew<Number> (attr [3]));
+		result->Set (NanNew<String> ("azimuth"),						NanNew<Number> (attr [4]));
+		result->Set (NanNew<String> ("trueAltitude"),				NanNew<Number> (attr [5]));
+		result->Set (NanNew<String> ("apparentAltitude"),			NanNew<Number> (attr [6]));
+		result->Set (NanNew<String> ("moonToSunAngularDistance"),	NanNew<Number> (attr [7]));
+		result->Set (NanNew<String> ("eclipseMagnitude"),			NanNew<Number> (attr [8]));
+		result->Set (NanNew<String> ("sarosNumber"),					NanNew<Number> (attr [9]));
+		result->Set (NanNew<String> ("sarosMember"),					NanNew<Number> (attr [10]));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -318,12 +306,11 @@ Handle <Value> node_swe_sol_eclipse_how (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_sol_eclipse_when_loc (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_sol_eclipse_when_loc) {
+	NanScope();
 
 	if (args.Length () < 6) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -334,8 +321,7 @@ Handle <Value> node_swe_sol_eclipse_when_loc (const Arguments & args) {
 		!args [4]->IsNumber () ||
 		!args [5]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double geopos [10] = {0};
@@ -356,32 +342,31 @@ Handle <Value> node_swe_sol_eclipse_when_loc (const Arguments & args) {
 		serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("maximum"),		Number::New (tret [0]));
-		result->Set (String::NewSymbol ("first"),		Number::New (tret [1]));
-		result->Set (String::NewSymbol ("second"),		Number::New (tret [2]));
-		result->Set (String::NewSymbol ("third"),		Number::New (tret [3]));
-		result->Set (String::NewSymbol ("forth"),		Number::New (tret [4]));
-		result->Set (String::NewSymbol ("solarDiameterFraction"),		Number::New (attr [0]));
-		result->Set (String::NewSymbol ("lonarToSolarDiameterRatio"),	Number::New (attr [1]));
-		result->Set (String::NewSymbol ("solarDiscFraction"),			Number::New (attr [2]));
-		result->Set (String::NewSymbol ("coreShadow"),					Number::New (attr [3]));
-		result->Set (String::NewSymbol ("azimuth"),						Number::New (attr [4]));
-		result->Set (String::NewSymbol ("trueAltitude"),				Number::New (attr [5]));
-		result->Set (String::NewSymbol ("apparentAltitude"),			Number::New (attr [6]));
-		result->Set (String::NewSymbol ("moonToSunAngularDistance"),	Number::New (attr [7]));
-		result->Set (String::NewSymbol ("eclipseMagnitude"),			Number::New (attr [8]));
-		result->Set (String::NewSymbol ("sarosNumber"),					Number::New (attr [9]));
-		result->Set (String::NewSymbol ("sarosMember"),					Number::New (attr [10]));
+		result->Set (NanNew<String> ("maximum"),		NanNew<Number> (tret [0]));
+		result->Set (NanNew<String> ("first"),		NanNew<Number> (tret [1]));
+		result->Set (NanNew<String> ("second"),		NanNew<Number> (tret [2]));
+		result->Set (NanNew<String> ("third"),		NanNew<Number> (tret [3]));
+		result->Set (NanNew<String> ("forth"),		NanNew<Number> (tret [4]));
+		result->Set (NanNew<String> ("solarDiameterFraction"),		NanNew<Number> (attr [0]));
+		result->Set (NanNew<String> ("lonarToSolarDiameterRatio"),	NanNew<Number> (attr [1]));
+		result->Set (NanNew<String> ("solarDiscFraction"),			NanNew<Number> (attr [2]));
+		result->Set (NanNew<String> ("coreShadow"),					NanNew<Number> (attr [3]));
+		result->Set (NanNew<String> ("azimuth"),						NanNew<Number> (attr [4]));
+		result->Set (NanNew<String> ("trueAltitude"),				NanNew<Number> (attr [5]));
+		result->Set (NanNew<String> ("apparentAltitude"),			NanNew<Number> (attr [6]));
+		result->Set (NanNew<String> ("moonToSunAngularDistance"),	NanNew<Number> (attr [7]));
+		result->Set (NanNew<String> ("eclipseMagnitude"),			NanNew<Number> (attr [8]));
+		result->Set (NanNew<String> ("sarosNumber"),					NanNew<Number> (attr [9]));
+		result->Set (NanNew<String> ("sarosMember"),					NanNew<Number> (attr [10]));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -408,12 +393,11 @@ Handle <Value> node_swe_sol_eclipse_when_loc (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_lun_occult_when_loc (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_lun_occult_when_loc) {
+	NanScope();
 
 	if (args.Length () < 8) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -426,8 +410,7 @@ Handle <Value> node_swe_lun_occult_when_loc (const Arguments & args) {
 		!args [6]->IsNumber () ||
 		!args [7]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double geopos [10] = {0};
@@ -437,7 +420,7 @@ Handle <Value> node_swe_lun_occult_when_loc (const Arguments & args) {
 	char serr [AS_MAXCH];
 	long rflag;
 
-	::strcpy (star, * String::AsciiValue (args [2]->ToString ()));
+	::strcpy (star, * NanAsciiString (args [2]->ToString ()));
 
 	geopos [0] = args [4]->NumberValue ();
 	geopos [1] = args [5]->NumberValue ();
@@ -453,33 +436,32 @@ Handle <Value> node_swe_lun_occult_when_loc (const Arguments & args) {
 		serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("name"), String::New (star));
-		result->Set (String::NewSymbol ("maximum"),		Number::New (tret [0]));
-		result->Set (String::NewSymbol ("first"),		Number::New (tret [1]));
-		result->Set (String::NewSymbol ("second"),		Number::New (tret [2]));
-		result->Set (String::NewSymbol ("third"),		Number::New (tret [3]));
-		result->Set (String::NewSymbol ("forth"),		Number::New (tret [4]));
-		result->Set (String::NewSymbol ("solarDiameterFraction"),		Number::New (attr [0]));
-		result->Set (String::NewSymbol ("lonarToSolarDiameterRatio"),	Number::New (attr [1]));
-		result->Set (String::NewSymbol ("solarDiscFraction"),			Number::New (attr [2]));
-		result->Set (String::NewSymbol ("coreShadow"),					Number::New (attr [3]));
-		result->Set (String::NewSymbol ("azimuth"),						Number::New (attr [4]));
-		result->Set (String::NewSymbol ("trueAltitude"),				Number::New (attr [5]));
-		result->Set (String::NewSymbol ("apparentAltitude"),			Number::New (attr [6]));
-		result->Set (String::NewSymbol ("moonToSunAngularDistance"),	Number::New (attr [7]));
-		result->Set (String::NewSymbol ("eclipseMagnitude"),			Number::New (attr [8]));
-		result->Set (String::NewSymbol ("sarosNumber"),					Number::New (attr [9]));
-		result->Set (String::NewSymbol ("sarosMember"),					Number::New (attr [10]));
+		result->Set (NanNew<String> ("name"), NanNew<String> (star));
+		result->Set (NanNew<String> ("maximum"),		NanNew<Number> (tret [0]));
+		result->Set (NanNew<String> ("first"),		NanNew<Number> (tret [1]));
+		result->Set (NanNew<String> ("second"),		NanNew<Number> (tret [2]));
+		result->Set (NanNew<String> ("third"),		NanNew<Number> (tret [3]));
+		result->Set (NanNew<String> ("forth"),		NanNew<Number> (tret [4]));
+		result->Set (NanNew<String> ("solarDiameterFraction"),		NanNew<Number> (attr [0]));
+		result->Set (NanNew<String> ("lonarToSolarDiameterRatio"),	NanNew<Number> (attr [1]));
+		result->Set (NanNew<String> ("solarDiscFraction"),			NanNew<Number> (attr [2]));
+		result->Set (NanNew<String> ("coreShadow"),					NanNew<Number> (attr [3]));
+		result->Set (NanNew<String> ("azimuth"),						NanNew<Number> (attr [4]));
+		result->Set (NanNew<String> ("trueAltitude"),				NanNew<Number> (attr [5]));
+		result->Set (NanNew<String> ("apparentAltitude"),			NanNew<Number> (attr [6]));
+		result->Set (NanNew<String> ("moonToSunAngularDistance"),	NanNew<Number> (attr [7]));
+		result->Set (NanNew<String> ("eclipseMagnitude"),			NanNew<Number> (attr [8]));
+		result->Set (NanNew<String> ("sarosNumber"),					NanNew<Number> (attr [9]));
+		result->Set (NanNew<String> ("sarosMember"),					NanNew<Number> (attr [10]));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -497,12 +479,11 @@ Handle <Value> node_swe_lun_occult_when_loc (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_sol_eclipse_when_glob (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_sol_eclipse_when_glob) {
+	NanScope();
 
 	if (args.Length () < 4) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -511,8 +492,7 @@ Handle <Value> node_swe_sol_eclipse_when_glob (const Arguments & args) {
 		!args [2]->IsNumber () ||
 		!args [3]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double tret [10] = {0};
@@ -528,24 +508,23 @@ Handle <Value> node_swe_sol_eclipse_when_glob (const Arguments & args) {
 		serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("maximum"),		Number::New (tret [0]));
-		result->Set (String::NewSymbol ("noon"),		Number::New (tret [1]));
-		result->Set (String::NewSymbol ("begin"),		Number::New (tret [2]));
-		result->Set (String::NewSymbol ("end"),			Number::New (tret [3]));
-		result->Set (String::NewSymbol ("totalBegin"),	Number::New (tret [4]));
-		result->Set (String::NewSymbol ("totalEnd"),	Number::New (tret [5]));
-		result->Set (String::NewSymbol ("centerBegin"),	Number::New (tret [6]));
-		result->Set (String::NewSymbol ("centerEnd"),	Number::New (tret [7]));
+		result->Set (NanNew<String> ("maximum"),		NanNew<Number> (tret [0]));
+		result->Set (NanNew<String> ("noon"),		NanNew<Number> (tret [1]));
+		result->Set (NanNew<String> ("begin"),		NanNew<Number> (tret [2]));
+		result->Set (NanNew<String> ("end"),			NanNew<Number> (tret [3]));
+		result->Set (NanNew<String> ("totalBegin"),	NanNew<Number> (tret [4]));
+		result->Set (NanNew<String> ("totalEnd"),	NanNew<Number> (tret [5]));
+		result->Set (NanNew<String> ("centerBegin"),	NanNew<Number> (tret [6]));
+		result->Set (NanNew<String> ("centerEnd"),	NanNew<Number> (tret [7]));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -564,12 +543,11 @@ Handle <Value> node_swe_sol_eclipse_when_glob (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_lun_occult_when_glob (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_lun_occult_when_glob) {
+	NanScope();
 
 	if (args.Length () < 6) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -580,8 +558,7 @@ Handle <Value> node_swe_lun_occult_when_glob (const Arguments & args) {
 		!args [4]->IsNumber () ||
 		!args [5]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double tret [10] = {0};
@@ -589,7 +566,7 @@ Handle <Value> node_swe_lun_occult_when_glob (const Arguments & args) {
 	char serr [AS_MAXCH];
 	long rflag;
 
-	::strcpy (star, * String::AsciiValue (args [2]->ToString ()));
+	::strcpy (star, * NanAsciiString (args [2]->ToString ()));
 
 	rflag = ::swe_lun_occult_when_glob (
 		args [0]->NumberValue (),
@@ -602,25 +579,24 @@ Handle <Value> node_swe_lun_occult_when_glob (const Arguments & args) {
 		serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("name"), String::New (star));
-		result->Set (String::NewSymbol ("maximum"),		Number::New (tret [0]));
-		result->Set (String::NewSymbol ("noon"),		Number::New (tret [1]));
-		result->Set (String::NewSymbol ("begin"),		Number::New (tret [2]));
-		result->Set (String::NewSymbol ("end"),			Number::New (tret [3]));
-		result->Set (String::NewSymbol ("totalBegin"),	Number::New (tret [4]));
-		result->Set (String::NewSymbol ("totalEnd"),	Number::New (tret [5]));
-		result->Set (String::NewSymbol ("centerBegin"),	Number::New (tret [6]));
-		result->Set (String::NewSymbol ("centerEnd"),	Number::New (tret [7]));
+		result->Set (NanNew<String> ("name"), NanNew<String> (star));
+		result->Set (NanNew<String> ("maximum"),		NanNew<Number> (tret [0]));
+		result->Set (NanNew<String> ("noon"),		NanNew<Number> (tret [1]));
+		result->Set (NanNew<String> ("begin"),		NanNew<Number> (tret [2]));
+		result->Set (NanNew<String> ("end"),			NanNew<Number> (tret [3]));
+		result->Set (NanNew<String> ("totalBegin"),	NanNew<Number> (tret [4]));
+		result->Set (NanNew<String> ("totalEnd"),	NanNew<Number> (tret [5]));
+		result->Set (NanNew<String> ("centerBegin"),	NanNew<Number> (tret [6]));
+		result->Set (NanNew<String> ("centerEnd"),	NanNew<Number> (tret [7]));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -639,12 +615,11 @@ Handle <Value> node_swe_lun_occult_when_glob (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_lun_eclipse_how (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_lun_eclipse_how) {
+	NanScope();
 
 	if (args.Length () < 5) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -654,8 +629,7 @@ Handle <Value> node_swe_lun_eclipse_how (const Arguments & args) {
 		!args [3]->IsNumber () ||
 		!args [4]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double geopos [10] = {0};
@@ -673,25 +647,24 @@ Handle <Value> node_swe_lun_eclipse_how (const Arguments & args) {
 		geopos, attr, serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("umbralMagnitude"),		Number::New (attr [0]));
-		result->Set (String::NewSymbol ("penumbralMagnitude"),	Number::New (attr [1]));
-		result->Set (String::NewSymbol ("azimuth"),				Number::New (attr [4]));
-		result->Set (String::NewSymbol ("trueAltitude"),		Number::New (attr [5]));
-		result->Set (String::NewSymbol ("apparentAltitude"),	Number::New (attr [6]));
-		result->Set (String::NewSymbol ("oppositeDegreeDist"),	Number::New (attr [7]));
-		result->Set (String::NewSymbol ("magnitude"),			Number::New (attr [8]));
-		result->Set (String::NewSymbol ("sarosNumber"),			Number::New (attr [9]));
-		result->Set (String::NewSymbol ("sarosMember"),			Number::New (attr [10]));
+		result->Set (NanNew<String> ("umbralMagnitude"),		NanNew<Number> (attr [0]));
+		result->Set (NanNew<String> ("penumbralMagnitude"),	NanNew<Number> (attr [1]));
+		result->Set (NanNew<String> ("azimuth"),				NanNew<Number> (attr [4]));
+		result->Set (NanNew<String> ("trueAltitude"),		NanNew<Number> (attr [5]));
+		result->Set (NanNew<String> ("apparentAltitude"),	NanNew<Number> (attr [6]));
+		result->Set (NanNew<String> ("oppositeDegreeDist"),	NanNew<Number> (attr [7]));
+		result->Set (NanNew<String> ("magnitude"),			NanNew<Number> (attr [8]));
+		result->Set (NanNew<String> ("sarosNumber"),			NanNew<Number> (attr [9]));
+		result->Set (NanNew<String> ("sarosMember"),			NanNew<Number> (attr [10]));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -708,12 +681,11 @@ Handle <Value> node_swe_lun_eclipse_how (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_lun_eclipse_when (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_lun_eclipse_when) {
+	NanScope();
 
 	if (args.Length () < 4) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -722,8 +694,7 @@ Handle <Value> node_swe_lun_eclipse_when (const Arguments & args) {
 		!args [2]->IsNumber () ||
 		!args [3]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double tret [10] = {0};
@@ -739,23 +710,22 @@ Handle <Value> node_swe_lun_eclipse_when (const Arguments & args) {
 		serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("maximum"),			Number::New (tret [0]));
-		result->Set (String::NewSymbol ("partialBegin"),	Number::New (tret [2]));
-		result->Set (String::NewSymbol ("partialEnd"),		Number::New (tret [3]));
-		result->Set (String::NewSymbol ("totalBegin"),		Number::New (tret [4]));
-		result->Set (String::NewSymbol ("totalEnd"),		Number::New (tret [5]));
-		result->Set (String::NewSymbol ("penumbralBegin"),	Number::New (tret [6]));
-		result->Set (String::NewSymbol ("penumbralEnd"),	Number::New (tret [7]));
+		result->Set (NanNew<String> ("maximum"),			NanNew<Number> (tret [0]));
+		result->Set (NanNew<String> ("partialBegin"),	NanNew<Number> (tret [2]));
+		result->Set (NanNew<String> ("partialEnd"),		NanNew<Number> (tret [3]));
+		result->Set (NanNew<String> ("totalBegin"),		NanNew<Number> (tret [4]));
+		result->Set (NanNew<String> ("totalEnd"),		NanNew<Number> (tret [5]));
+		result->Set (NanNew<String> ("penumbralBegin"),	NanNew<Number> (tret [6]));
+		result->Set (NanNew<String> ("penumbralEnd"),	NanNew<Number> (tret [7]));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -770,12 +740,11 @@ Handle <Value> node_swe_lun_eclipse_when (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_pheno (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_pheno) {
+	NanScope();
 
 	if (args.Length () < 3) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -783,8 +752,7 @@ Handle <Value> node_swe_pheno (const Arguments & args) {
 		!args [1]->IsNumber () ||
 		!args [2]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double attr [20];
@@ -798,22 +766,21 @@ Handle <Value> node_swe_pheno (const Arguments & args) {
 		attr, serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("phaseAngle"), Number::New (attr [0]));
-		result->Set (String::NewSymbol ("phase"), Number::New (attr [1]));
-		result->Set (String::NewSymbol ("elongation"), Number::New (attr [2]));
-		result->Set (String::NewSymbol ("apparentDiameter"), Number::New (attr [3]));
-		result->Set (String::NewSymbol ("apparentMagnitude"), Number::New (attr [4]));
-		result->Set (String::NewSymbol ("rflag"), Number::New (rflag));
+		result->Set (NanNew<String> ("phaseAngle"), NanNew<Number> (attr [0]));
+		result->Set (NanNew<String> ("phase"), NanNew<Number> (attr [1]));
+		result->Set (NanNew<String> ("elongation"), NanNew<Number> (attr [2]));
+		result->Set (NanNew<String> ("apparentDiameter"), NanNew<Number> (attr [3]));
+		result->Set (NanNew<String> ("apparentMagnitude"), NanNew<Number> (attr [4]));
+		result->Set (NanNew<String> ("rflag"), NanNew<Number> (rflag));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -828,12 +795,11 @@ Handle <Value> node_swe_pheno (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_pheno_ut (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_pheno_ut) {
+	NanScope();
 
 	if (args.Length () < 3) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -841,8 +807,7 @@ Handle <Value> node_swe_pheno_ut (const Arguments & args) {
 		!args [1]->IsNumber () ||
 		!args [2]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double attr [20];
@@ -856,22 +821,21 @@ Handle <Value> node_swe_pheno_ut (const Arguments & args) {
 		attr, serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("phaseAngle"), Number::New (attr [0]));
-		result->Set (String::NewSymbol ("phase"), Number::New (attr [1]));
-		result->Set (String::NewSymbol ("elongation"), Number::New (attr [2]));
-		result->Set (String::NewSymbol ("apparentDiameter"), Number::New (attr [3]));
-		result->Set (String::NewSymbol ("apparentMagnitude"), Number::New (attr [4]));
-		result->Set (String::NewSymbol ("rflag"), Number::New (rflag));
+		result->Set (NanNew<String> ("phaseAngle"), NanNew<Number> (attr [0]));
+		result->Set (NanNew<String> ("phase"), NanNew<Number> (attr [1]));
+		result->Set (NanNew<String> ("elongation"), NanNew<Number> (attr [2]));
+		result->Set (NanNew<String> ("apparentDiameter"), NanNew<Number> (attr [3]));
+		result->Set (NanNew<String> ("apparentMagnitude"), NanNew<Number> (attr [4]));
+		result->Set (NanNew<String> ("rflag"), NanNew<Number> (rflag));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -881,12 +845,11 @@ Handle <Value> node_swe_pheno_ut (const Arguments & args) {
  *   refraction: double
  * }
  */
-Handle <Value> node_swe_refrac (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_refrac) {
+	NanScope();
 
 	if (args.Length () < 4) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -895,8 +858,7 @@ Handle <Value> node_swe_refrac (const Arguments & args) {
 		!args [2]->IsNumber () ||
 		!args [3]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double refraction;
@@ -908,13 +870,12 @@ Handle <Value> node_swe_refrac (const Arguments & args) {
 		(int)args [3]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("refraction"), Number::New (refraction));
+	result->Set (NanNew<String> ("refraction"), NanNew<Number> (refraction));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -927,12 +888,11 @@ Handle <Value> node_swe_refrac (const Arguments & args) {
  *   horizonDip: double         // dret [3]
  * }
  */
-Handle <Value> node_swe_refrac_extended (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_refrac_extended) {
+	NanScope();
 
 	if (args.Length () < 6) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -943,8 +903,7 @@ Handle <Value> node_swe_refrac_extended (const Arguments & args) {
 		!args [4]->IsNumber () ||
 		!args [5]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double refraction;
@@ -960,16 +919,15 @@ Handle <Value> node_swe_refrac_extended (const Arguments & args) {
 		dret
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("refraction"), Number::New (refraction));
-	result->Set (String::NewSymbol ("trueAltitude"),		Number::New (dret [0]));
-	result->Set (String::NewSymbol ("apparentAltitude"),	Number::New (dret [1]));
-	result->Set (String::NewSymbol ("horizonDip"),			Number::New (dret [3]));
+	result->Set (NanNew<String> ("refraction"), NanNew<Number> (refraction));
+	result->Set (NanNew<String> ("trueAltitude"),		NanNew<Number> (dret [0]));
+	result->Set (NanNew<String> ("apparentAltitude"),	NanNew<Number> (dret [1]));
+	result->Set (NanNew<String> ("horizonDip"),			NanNew<Number> (dret [3]));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -978,30 +936,27 @@ Handle <Value> node_swe_refrac_extended (const Arguments & args) {
  * swe_set_lapse_rate(double lapse_rate[, function callback (result)]) = {
  * }
  */
-Handle <Value> node_swe_set_lapse_rate (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_set_lapse_rate) {
+	NanScope();
 
 	if (args.Length () < 1) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	::swe_set_lapse_rate (
         args [0]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -1013,12 +968,11 @@ Handle <Value> node_swe_set_lapse_rate (const Arguments & args) {
  *   apparentAltitude: double    // xaz [2]
  * }
  */
-Handle <Value> node_swe_azalt (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_azalt) {
+	NanScope();
 
 	if (args.Length () < 10) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -1033,8 +987,7 @@ Handle <Value> node_swe_azalt (const Arguments & args) {
 		!args [8]->IsNumber () ||
 		!args [9]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double geopos [10] = {0};
@@ -1058,15 +1011,14 @@ Handle <Value> node_swe_azalt (const Arguments & args) {
 		xin, xaz
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("azimuth"),				Number::New (xaz [0]));
-	result->Set (String::NewSymbol ("trueAltitude"),		Number::New (xaz [1]));
-	result->Set (String::NewSymbol ("apparentAltitude"),	Number::New (xaz [2]));
+	result->Set (NanNew<String> ("azimuth"),				NanNew<Number> (xaz [0]));
+	result->Set (NanNew<String> ("trueAltitude"),		NanNew<Number> (xaz [1]));
+	result->Set (NanNew<String> ("apparentAltitude"),	NanNew<Number> (xaz [2]));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -1077,12 +1029,11 @@ Handle <Value> node_swe_azalt (const Arguments & args) {
  *   trueAltitude: double  // xout [1]
  * }
  */
-Handle <Value> node_swe_azalt_rev (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_azalt_rev) {
+	NanScope();
 
 	if (args.Length () < 7) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -1094,8 +1045,7 @@ Handle <Value> node_swe_azalt_rev (const Arguments & args) {
 		!args [5]->IsNumber () ||
 		!args [6]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double geopos [10] = {0};
@@ -1115,14 +1065,13 @@ Handle <Value> node_swe_azalt_rev (const Arguments & args) {
 		geopos, xin, xout
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("azimuth"),			Number::New (xout [0]));
-	result->Set (String::NewSymbol ("trueAltitude"),	Number::New (xout [1]));
+	result->Set (NanNew<String> ("azimuth"),			NanNew<Number> (xout [0]));
+	result->Set (NanNew<String> ("trueAltitude"),	NanNew<Number> (xout [1]));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -1133,12 +1082,11 @@ Handle <Value> node_swe_azalt_rev (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_rise_trans (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_rise_trans) {
+	NanScope();
 
 	if (args.Length () < 10) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -1153,8 +1101,7 @@ Handle <Value> node_swe_rise_trans (const Arguments & args) {
 		!args [8]->IsNumber () ||
 		!args [9]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double geopos [10] = {0};
@@ -1163,7 +1110,7 @@ Handle <Value> node_swe_rise_trans (const Arguments & args) {
 	char serr [AS_MAXCH];
 	long rflag;
 
-	::strcpy (star, * String::AsciiValue (args [2]->ToString ()));
+	::strcpy (star, * NanAsciiString (args [2]->ToString ()));
 
 	geopos [0] = args [5]->NumberValue ();
 	geopos [1] = args [6]->NumberValue ();
@@ -1181,18 +1128,17 @@ Handle <Value> node_swe_rise_trans (const Arguments & args) {
 		&tret, serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("name"), String::New (star));
-		result->Set (String::NewSymbol ("transitTime"), Number::New (tret));
+		result->Set (NanNew<String> ("name"), NanNew<String> (star));
+		result->Set (NanNew<String> ("transitTime"), NanNew<Number> (tret));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -1234,12 +1180,11 @@ Handle <Value> node_swe_rise_trans (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_nod_aps (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_nod_aps) {
+	NanScope();
 
 	if (args.Length () < 4) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -1248,8 +1193,7 @@ Handle <Value> node_swe_nod_aps (const Arguments & args) {
 		!args [2]->IsNumber () ||
 		!args [3]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double xnasc [6] = {0};
@@ -1267,51 +1211,50 @@ Handle <Value> node_swe_nod_aps (const Arguments & args) {
 		xnasc, xndsc, xperi, xaphe, serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		Local <Object> ascending = Object::New ();
-		ascending->Set (String::NewSymbol ("longitude"), 		Number::New (xnasc [0]));
-		ascending->Set (String::NewSymbol ("latitude"), 		Number::New (xnasc [1]));
-		ascending->Set (String::NewSymbol ("distance"), 		Number::New (xnasc [2]));
-		ascending->Set (String::NewSymbol ("longitudeSpeed"),	Number::New (xnasc [3]));
-		ascending->Set (String::NewSymbol ("latitudeSpeed"),	Number::New (xnasc [4]));
-		ascending->Set (String::NewSymbol ("distanceSpeed"),	Number::New (xnasc [5]));
-		result->Set (String::NewSymbol ("ascending"), ascending);
+		Local <Object> ascending = NanNew<Object> ();
+		ascending->Set (NanNew<String> ("longitude"), 		NanNew<Number> (xnasc [0]));
+		ascending->Set (NanNew<String> ("latitude"), 		NanNew<Number> (xnasc [1]));
+		ascending->Set (NanNew<String> ("distance"), 		NanNew<Number> (xnasc [2]));
+		ascending->Set (NanNew<String> ("longitudeSpeed"),	NanNew<Number> (xnasc [3]));
+		ascending->Set (NanNew<String> ("latitudeSpeed"),	NanNew<Number> (xnasc [4]));
+		ascending->Set (NanNew<String> ("distanceSpeed"),	NanNew<Number> (xnasc [5]));
+		result->Set (NanNew<String> ("ascending"), ascending);
 
-		Local <Object> descending = Object::New ();
-		descending->Set (String::NewSymbol ("longitude"), 		Number::New (xndsc [0]));
-		descending->Set (String::NewSymbol ("latitude"), 		Number::New (xndsc [1]));
-		descending->Set (String::NewSymbol ("distance"), 		Number::New (xndsc [2]));
-		descending->Set (String::NewSymbol ("longitudeSpeed"),	Number::New (xndsc [3]));
-		descending->Set (String::NewSymbol ("latitudeSpeed"),	Number::New (xndsc [4]));
-		descending->Set (String::NewSymbol ("distanceSpeed"),	Number::New (xndsc [5]));
-		result->Set (String::NewSymbol ("descending"), descending);
+		Local <Object> descending = NanNew<Object> ();
+		descending->Set (NanNew<String> ("longitude"), 		NanNew<Number> (xndsc [0]));
+		descending->Set (NanNew<String> ("latitude"), 		NanNew<Number> (xndsc [1]));
+		descending->Set (NanNew<String> ("distance"), 		NanNew<Number> (xndsc [2]));
+		descending->Set (NanNew<String> ("longitudeSpeed"),	NanNew<Number> (xndsc [3]));
+		descending->Set (NanNew<String> ("latitudeSpeed"),	NanNew<Number> (xndsc [4]));
+		descending->Set (NanNew<String> ("distanceSpeed"),	NanNew<Number> (xndsc [5]));
+		result->Set (NanNew<String> ("descending"), descending);
 
-		Local <Object> perihelion = Object::New ();
-		perihelion->Set (String::NewSymbol ("longitude"), 		Number::New (xperi [0]));
-		perihelion->Set (String::NewSymbol ("latitude"), 		Number::New (xperi [1]));
-		perihelion->Set (String::NewSymbol ("distance"), 		Number::New (xperi [2]));
-		perihelion->Set (String::NewSymbol ("longitudeSpeed"),	Number::New (xperi [3]));
-		perihelion->Set (String::NewSymbol ("latitudeSpeed"),	Number::New (xperi [4]));
-		perihelion->Set (String::NewSymbol ("distanceSpeed"),	Number::New (xperi [5]));
-		result->Set (String::NewSymbol ("perihelion"), perihelion);
+		Local <Object> perihelion = NanNew<Object> ();
+		perihelion->Set (NanNew<String> ("longitude"), 		NanNew<Number> (xperi [0]));
+		perihelion->Set (NanNew<String> ("latitude"), 		NanNew<Number> (xperi [1]));
+		perihelion->Set (NanNew<String> ("distance"), 		NanNew<Number> (xperi [2]));
+		perihelion->Set (NanNew<String> ("longitudeSpeed"),	NanNew<Number> (xperi [3]));
+		perihelion->Set (NanNew<String> ("latitudeSpeed"),	NanNew<Number> (xperi [4]));
+		perihelion->Set (NanNew<String> ("distanceSpeed"),	NanNew<Number> (xperi [5]));
+		result->Set (NanNew<String> ("perihelion"), perihelion);
 
-		Local <Object> aphelion = Object::New ();
-		aphelion->Set (String::NewSymbol ("longitude"), 		Number::New (xaphe [0]));
-		aphelion->Set (String::NewSymbol ("latitude"), 			Number::New (xaphe [1]));
-		aphelion->Set (String::NewSymbol ("distance"), 			Number::New (xaphe [2]));
-		aphelion->Set (String::NewSymbol ("longitudeSpeed"),	Number::New (xaphe [3]));
-		aphelion->Set (String::NewSymbol ("latitudeSpeed"),		Number::New (xaphe [4]));
-		aphelion->Set (String::NewSymbol ("distanceSpeed"),		Number::New (xaphe [5]));
-		result->Set (String::NewSymbol ("aphelion"), aphelion);
+		Local <Object> aphelion = NanNew<Object> ();
+		aphelion->Set (NanNew<String> ("longitude"), 		NanNew<Number> (xaphe [0]));
+		aphelion->Set (NanNew<String> ("latitude"), 			NanNew<Number> (xaphe [1]));
+		aphelion->Set (NanNew<String> ("distance"), 			NanNew<Number> (xaphe [2]));
+		aphelion->Set (NanNew<String> ("longitudeSpeed"),	NanNew<Number> (xaphe [3]));
+		aphelion->Set (NanNew<String> ("latitudeSpeed"),		NanNew<Number> (xaphe [4]));
+		aphelion->Set (NanNew<String> ("distanceSpeed"),		NanNew<Number> (xaphe [5]));
+		result->Set (NanNew<String> ("aphelion"), aphelion);
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -1353,12 +1296,11 @@ Handle <Value> node_swe_nod_aps (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_nod_aps_ut (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_nod_aps_ut) {
+	NanScope();
 
 	if (args.Length () < 4) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -1367,8 +1309,7 @@ Handle <Value> node_swe_nod_aps_ut (const Arguments & args) {
 		!args [2]->IsNumber () ||
 		!args [3]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double xnasc [6] = {0};
@@ -1386,49 +1327,48 @@ Handle <Value> node_swe_nod_aps_ut (const Arguments & args) {
 		xnasc, xndsc, xperi, xaphe, serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		Local <Object> ascending = Object::New ();
-		ascending->Set (String::NewSymbol ("longitude"), 		Number::New (xnasc [0]));
-		ascending->Set (String::NewSymbol ("latitude"), 		Number::New (xnasc [1]));
-		ascending->Set (String::NewSymbol ("distance"), 		Number::New (xnasc [2]));
-		ascending->Set (String::NewSymbol ("longitudeSpeed"),	Number::New (xnasc [3]));
-		ascending->Set (String::NewSymbol ("latitudeSpeed"),	Number::New (xnasc [4]));
-		ascending->Set (String::NewSymbol ("distanceSpeed"),	Number::New (xnasc [5]));
-		result->Set (String::NewSymbol ("ascending"), ascending);
+		Local <Object> ascending = NanNew<Object> ();
+		ascending->Set (NanNew<String> ("longitude"), 		NanNew<Number> (xnasc [0]));
+		ascending->Set (NanNew<String> ("latitude"), 		NanNew<Number> (xnasc [1]));
+		ascending->Set (NanNew<String> ("distance"), 		NanNew<Number> (xnasc [2]));
+		ascending->Set (NanNew<String> ("longitudeSpeed"),	NanNew<Number> (xnasc [3]));
+		ascending->Set (NanNew<String> ("latitudeSpeed"),	NanNew<Number> (xnasc [4]));
+		ascending->Set (NanNew<String> ("distanceSpeed"),	NanNew<Number> (xnasc [5]));
+		result->Set (NanNew<String> ("ascending"), ascending);
 
-		Local <Object> descending = Object::New ();
-		descending->Set (String::NewSymbol ("longitude"), 		Number::New (xndsc [0]));
-		descending->Set (String::NewSymbol ("latitude"), 		Number::New (xndsc [1]));
-		descending->Set (String::NewSymbol ("distance"), 		Number::New (xndsc [2]));
-		descending->Set (String::NewSymbol ("longitudeSpeed"),	Number::New (xndsc [3]));
-		descending->Set (String::NewSymbol ("latitudeSpeed"),	Number::New (xndsc [4]));
-		descending->Set (String::NewSymbol ("distanceSpeed"),	Number::New (xndsc [5]));
-		result->Set (String::NewSymbol ("descending"), descending);
+		Local <Object> descending = NanNew<Object> ();
+		descending->Set (NanNew<String> ("longitude"), 		NanNew<Number> (xndsc [0]));
+		descending->Set (NanNew<String> ("latitude"), 		NanNew<Number> (xndsc [1]));
+		descending->Set (NanNew<String> ("distance"), 		NanNew<Number> (xndsc [2]));
+		descending->Set (NanNew<String> ("longitudeSpeed"),	NanNew<Number> (xndsc [3]));
+		descending->Set (NanNew<String> ("latitudeSpeed"),	NanNew<Number> (xndsc [4]));
+		descending->Set (NanNew<String> ("distanceSpeed"),	NanNew<Number> (xndsc [5]));
+		result->Set (NanNew<String> ("descending"), descending);
 
-		Local <Object> perihelion = Object::New ();
-		perihelion->Set (String::NewSymbol ("longitude"), 		Number::New (xperi [0]));
-		perihelion->Set (String::NewSymbol ("latitude"), 		Number::New (xperi [1]));
-		perihelion->Set (String::NewSymbol ("distance"), 		Number::New (xperi [2]));
-		perihelion->Set (String::NewSymbol ("longitudeSpeed"),	Number::New (xperi [3]));
-		perihelion->Set (String::NewSymbol ("latitudeSpeed"),	Number::New (xperi [4]));
-		perihelion->Set (String::NewSymbol ("distanceSpeed"),	Number::New (xperi [5]));
-		result->Set (String::NewSymbol ("perihelion"), perihelion);
+		Local <Object> perihelion = NanNew<Object> ();
+		perihelion->Set (NanNew<String> ("longitude"), 		NanNew<Number> (xperi [0]));
+		perihelion->Set (NanNew<String> ("latitude"), 		NanNew<Number> (xperi [1]));
+		perihelion->Set (NanNew<String> ("distance"), 		NanNew<Number> (xperi [2]));
+		perihelion->Set (NanNew<String> ("longitudeSpeed"),	NanNew<Number> (xperi [3]));
+		perihelion->Set (NanNew<String> ("latitudeSpeed"),	NanNew<Number> (xperi [4]));
+		perihelion->Set (NanNew<String> ("distanceSpeed"),	NanNew<Number> (xperi [5]));
+		result->Set (NanNew<String> ("perihelion"), perihelion);
 
-		Local <Object> aphelion = Object::New ();
-		aphelion->Set (String::NewSymbol ("longitude"), 		Number::New (xaphe [0]));
-		aphelion->Set (String::NewSymbol ("latitude"), 			Number::New (xaphe [1]));
-		aphelion->Set (String::NewSymbol ("distance"), 			Number::New (xaphe [2]));
-		aphelion->Set (String::NewSymbol ("longitudeSpeed"),	Number::New (xaphe [3]));
-		aphelion->Set (String::NewSymbol ("latitudeSpeed"),		Number::New (xaphe [4]));
-		aphelion->Set (String::NewSymbol ("distanceSpeed"),		Number::New (xaphe [5]));
-		result->Set (String::NewSymbol ("aphelion"), aphelion);
+		Local <Object> aphelion = NanNew<Object> ();
+		aphelion->Set (NanNew<String> ("longitude"), 		NanNew<Number> (xaphe [0]));
+		aphelion->Set (NanNew<String> ("latitude"), 			NanNew<Number> (xaphe [1]));
+		aphelion->Set (NanNew<String> ("distance"), 			NanNew<Number> (xaphe [2]));
+		aphelion->Set (NanNew<String> ("longitudeSpeed"),	NanNew<Number> (xaphe [3]));
+		aphelion->Set (NanNew<String> ("latitudeSpeed"),		NanNew<Number> (xaphe [4]));
+		aphelion->Set (NanNew<String> ("distanceSpeed"),		NanNew<Number> (xaphe [5]));
+		result->Set (NanNew<String> ("aphelion"), aphelion);
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };

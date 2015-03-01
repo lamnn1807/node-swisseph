@@ -15,12 +15,11 @@ using namespace v8;
  *   error: string
  * }
  */
-Handle <Value> node_swe_heliacal_ut (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_heliacal_ut) {
+	NanScope();
 
 	if (args.Length () < 7) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -32,8 +31,7 @@ Handle <Value> node_swe_heliacal_ut (const Arguments & args) {
 		!args [5]->IsNumber () ||
 		!args [6]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double dgeo [3] = {0};
@@ -60,7 +58,7 @@ Handle <Value> node_swe_heliacal_ut (const Arguments & args) {
 	dobs [4] = args [3]->ToObject ()->Get (4)->NumberValue ();
 	dobs [5] = args [3]->ToObject ()->Get (5)->NumberValue ();
 
-	::strcpy (name, *String::AsciiValue (args [4]->ToString ()));
+	::strcpy (name, *NanAsciiString (args [4]->ToString ()));
 
 	rflag = ::swe_heliacal_ut (
 		args [0]->NumberValue (),
@@ -70,20 +68,19 @@ Handle <Value> node_swe_heliacal_ut (const Arguments & args) {
 		dret, serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("startVisible"), Number::New (dret [0]));
-		result->Set (String::NewSymbol ("bestVisible"), Number::New (dret [1]));
-		result->Set (String::NewSymbol ("endVisible"), Number::New (dret [2]));
-		result->Set (String::NewSymbol ("rflag"), Number::New (rflag));
+		result->Set (NanNew<String> ("startVisible"), NanNew<Number> (dret [0]));
+		result->Set (NanNew<String> ("bestVisible"), NanNew<Number> (dret [1]));
+		result->Set (NanNew<String> ("endVisible"), NanNew<Number> (dret [2]));
+		result->Set (NanNew<String> ("rflag"), NanNew<Number> (rflag));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -117,20 +114,19 @@ Handle <Value> node_swe_heliacal_ut (const Arguments & args) {
  *   visibleDuration:  		 double, // '24=TvisVR [JDN]    visibility duration
  *   moonCresetLength:  	 double, // '25=LMoon [deg]     cresent length of moon
  *   elong:  				 double, // '26=CVAact [deg]
- *   illumination:  		 double, 
- *   kOZ:  					 double, 
- *   ka:  					 double, 
+ *   illumination:  		 double,
+ *   kOZ:  					 double,
+ *   ka:  					 double,
  *   ksumm:  				 double,
  *   rflag: int32,
  *   error: string
  * }
  */
-Handle <Value> node_swe_heliacal_pheno_ut (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_heliacal_pheno_ut) {
+	NanScope();
 
 	if (args.Length () < 7) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -142,8 +138,7 @@ Handle <Value> node_swe_heliacal_pheno_ut (const Arguments & args) {
 		!args [5]->IsNumber () ||
 		!args [6]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double dgeo [3] = {0};
@@ -170,7 +165,7 @@ Handle <Value> node_swe_heliacal_pheno_ut (const Arguments & args) {
 	dobs [4] = args [3]->ToObject ()->Get (4)->NumberValue ();
 	dobs [5] = args [3]->ToObject ()->Get (5)->NumberValue ();
 
-	::strcpy (name, *String::AsciiValue (args [4]->ToString ()));
+	::strcpy (name, *NanAsciiString (args [4]->ToString ()));
 
 	rflag = ::swe_heliacal_ut (
 		args [0]->NumberValue (),
@@ -180,48 +175,47 @@ Handle <Value> node_swe_heliacal_pheno_ut (const Arguments & args) {
 		darr, serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("tcAltitude"),			Number::New (darr [0]));
-		result->Set (String::NewSymbol ("tcApparentAltitude"),	Number::New (darr [1]));
-		result->Set (String::NewSymbol ("gcAltitude"),			Number::New (darr [2]));
-		result->Set (String::NewSymbol ("azimuth"),				Number::New (darr [3]));
-		result->Set (String::NewSymbol ("tcSunAltitude"),		Number::New (darr [4]));
-		result->Set (String::NewSymbol ("sunAzimuth"),			Number::New (darr [5]));
-		result->Set (String::NewSymbol ("tcActualVisibleArc"),	Number::New (darr [6]));
-		result->Set (String::NewSymbol ("gcActualVisibleArc"),	Number::New (darr [7]));
-		result->Set (String::NewSymbol ("objectToSunAzimuth"),	Number::New (darr [8]));
-		result->Set (String::NewSymbol ("objectToSunLongitude"),Number::New (darr [9]));
-		result->Set (String::NewSymbol ("extinction"),			Number::New (darr [10]));
-		result->Set (String::NewSymbol ("tcMinVisibleArc"),		Number::New (darr [11]));
-		result->Set (String::NewSymbol ("firstVisible"),		Number::New (darr [12]));
-		result->Set (String::NewSymbol ("bestVisible"),			Number::New (darr [13]));
-		result->Set (String::NewSymbol ("endVisible"),			Number::New (darr [14]));
-		result->Set (String::NewSymbol ("yallopBestVisible"),	Number::New (darr [15]));
-		result->Set (String::NewSymbol ("moonCresentWidth"),	Number::New (darr [16]));
-		result->Set (String::NewSymbol ("yallopValue"),			Number::New (darr [17]));
-		result->Set (String::NewSymbol ("yallopCriterion"),		Number::New (darr [18]));
-		result->Set (String::NewSymbol ("parallax"),			Number::New (darr [19]));
-		result->Set (String::NewSymbol ("magnitude"),			Number::New (darr [20]));
-		result->Set (String::NewSymbol ("rise"),				Number::New (darr [21]));
-		result->Set (String::NewSymbol ("riseSet"),				Number::New (darr [22]));
-		result->Set (String::NewSymbol ("riseObjectToSun"),		Number::New (darr [23]));
-		result->Set (String::NewSymbol ("visibleDuration"),		Number::New (darr [24]));
-		result->Set (String::NewSymbol ("moonCresetLength"),	Number::New (darr [25]));
-		result->Set (String::NewSymbol ("elong"),				Number::New (darr [26]));
-		result->Set (String::NewSymbol ("illumination"),		Number::New (darr [27]));
-		result->Set (String::NewSymbol ("kOZ"),					Number::New (darr [28]));
-		result->Set (String::NewSymbol ("ka"),					Number::New (darr [29]));
-		result->Set (String::NewSymbol ("ksumm"),				Number::New (darr [30]));
-		result->Set (String::NewSymbol ("rflag"), Number::New (rflag));
+		result->Set (NanNew<String> ("tcAltitude"),			NanNew<Number> (darr [0]));
+		result->Set (NanNew<String> ("tcApparentAltitude"),	NanNew<Number> (darr [1]));
+		result->Set (NanNew<String> ("gcAltitude"),			NanNew<Number> (darr [2]));
+		result->Set (NanNew<String> ("azimuth"),				NanNew<Number> (darr [3]));
+		result->Set (NanNew<String> ("tcSunAltitude"),		NanNew<Number> (darr [4]));
+		result->Set (NanNew<String> ("sunAzimuth"),			NanNew<Number> (darr [5]));
+		result->Set (NanNew<String> ("tcActualVisibleArc"),	NanNew<Number> (darr [6]));
+		result->Set (NanNew<String> ("gcActualVisibleArc"),	NanNew<Number> (darr [7]));
+		result->Set (NanNew<String> ("objectToSunAzimuth"),	NanNew<Number> (darr [8]));
+		result->Set (NanNew<String> ("objectToSunLongitude"),NanNew<Number> (darr [9]));
+		result->Set (NanNew<String> ("extinction"),			NanNew<Number> (darr [10]));
+		result->Set (NanNew<String> ("tcMinVisibleArc"),		NanNew<Number> (darr [11]));
+		result->Set (NanNew<String> ("firstVisible"),		NanNew<Number> (darr [12]));
+		result->Set (NanNew<String> ("bestVisible"),			NanNew<Number> (darr [13]));
+		result->Set (NanNew<String> ("endVisible"),			NanNew<Number> (darr [14]));
+		result->Set (NanNew<String> ("yallopBestVisible"),	NanNew<Number> (darr [15]));
+		result->Set (NanNew<String> ("moonCresentWidth"),	NanNew<Number> (darr [16]));
+		result->Set (NanNew<String> ("yallopValue"),			NanNew<Number> (darr [17]));
+		result->Set (NanNew<String> ("yallopCriterion"),		NanNew<Number> (darr [18]));
+		result->Set (NanNew<String> ("parallax"),			NanNew<Number> (darr [19]));
+		result->Set (NanNew<String> ("magnitude"),			NanNew<Number> (darr [20]));
+		result->Set (NanNew<String> ("rise"),				NanNew<Number> (darr [21]));
+		result->Set (NanNew<String> ("riseSet"),				NanNew<Number> (darr [22]));
+		result->Set (NanNew<String> ("riseObjectToSun"),		NanNew<Number> (darr [23]));
+		result->Set (NanNew<String> ("visibleDuration"),		NanNew<Number> (darr [24]));
+		result->Set (NanNew<String> ("moonCresetLength"),	NanNew<Number> (darr [25]));
+		result->Set (NanNew<String> ("elong"),				NanNew<Number> (darr [26]));
+		result->Set (NanNew<String> ("illumination"),		NanNew<Number> (darr [27]));
+		result->Set (NanNew<String> ("kOZ"),					NanNew<Number> (darr [28]));
+		result->Set (NanNew<String> ("ka"),					NanNew<Number> (darr [29]));
+		result->Set (NanNew<String> ("ksumm"),				NanNew<Number> (darr [30]));
+		result->Set (NanNew<String> ("rflag"), NanNew<Number> (rflag));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -239,12 +233,11 @@ Handle <Value> node_swe_heliacal_pheno_ut (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_vis_limit_mag (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_vis_limit_mag) {
+	NanScope();
 
 	if (args.Length () < 6) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -255,8 +248,7 @@ Handle <Value> node_swe_vis_limit_mag (const Arguments & args) {
 		!args [4]->IsString () ||
 		!args [5]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double dgeo [3] = {0};
@@ -283,7 +275,7 @@ Handle <Value> node_swe_vis_limit_mag (const Arguments & args) {
 	dobs [4] = args [3]->ToObject ()->Get (4)->NumberValue ();
 	dobs [5] = args [3]->ToObject ()->Get (5)->NumberValue ();
 
-	::strcpy (name, *String::AsciiValue (args [4]->ToString ()));
+	::strcpy (name, *NanAsciiString (args [4]->ToString ()));
 
 	rflag = ::swe_vis_limit_mag (
 		args [0]->NumberValue (),
@@ -292,22 +284,21 @@ Handle <Value> node_swe_vis_limit_mag (const Arguments & args) {
 		dret, serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("vissualMagnitudeLimit"), Number::New (dret [0]));
-		result->Set (String::NewSymbol ("AltO"), Number::New (dret [1]));
-		result->Set (String::NewSymbol ("AziO"), Number::New (dret [2]));
-		result->Set (String::NewSymbol ("AltS"), Number::New (dret [3]));
-		result->Set (String::NewSymbol ("AziS"), Number::New (dret [4]));
-		result->Set (String::NewSymbol ("AltM"), Number::New (dret [5]));
-		result->Set (String::NewSymbol ("AziM"), Number::New (dret [6]));
-		result->Set (String::NewSymbol ("rflag"), Number::New (rflag));
+		result->Set (NanNew<String> ("vissualMagnitudeLimit"), NanNew<Number> (dret [0]));
+		result->Set (NanNew<String> ("AltO"), NanNew<Number> (dret [1]));
+		result->Set (NanNew<String> ("AziO"), NanNew<Number> (dret [2]));
+		result->Set (NanNew<String> ("AltS"), NanNew<Number> (dret [3]));
+		result->Set (NanNew<String> ("AziS"), NanNew<Number> (dret [4]));
+		result->Set (NanNew<String> ("AltM"), NanNew<Number> (dret [5]));
+		result->Set (NanNew<String> ("AziM"), NanNew<Number> (dret [6]));
+		result->Set (NanNew<String> ("rflag"), NanNew<Number> (rflag));
 	};
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
