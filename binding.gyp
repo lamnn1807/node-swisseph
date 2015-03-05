@@ -14,7 +14,8 @@
       ],
       'dependencies': [
       	'deps/swisseph/swe.gyp:swe'
-      ]
+      ],
+      "include_dirs": ["<!(node -e \"require('nan')\")"]
     }
   ]
 }

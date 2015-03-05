@@ -1,6 +1,7 @@
 #define BUILDING_NODE_EXTENSION
 
 #include "swisseph.h"
+#include <nan.h>
 
 using namespace v8;
 
@@ -11,19 +12,17 @@ using namespace v8;
  *   delta: double
  * }
  */
-Handle <Value> node_swe_deltat (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_deltat) {
+    NanScope();
 
 	if (args.Length () < 1) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double deltat;
@@ -32,13 +31,12 @@ Handle <Value> node_swe_deltat (const Arguments & args) {
 		args [0]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("delta"), Number::New (deltat));
+	result->Set (NanNew<String> ("delta"), NanNew<Number> (deltat));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -49,19 +47,17 @@ Handle <Value> node_swe_deltat (const Arguments & args) {
  *   error: string
  * }
  */
-Handle <Value> node_swe_time_equ (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_time_equ) {
+    NanScope();
 
 	if (args.Length () < 1) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double te;
@@ -73,17 +69,16 @@ Handle <Value> node_swe_time_equ (const Arguments & args) {
 		&te, serr
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
 	if (rflag < 0) {
-		result->Set (String::NewSymbol ("error"), String::New (serr));
+		result->Set (NanNew<String> ("error"), NanNew<String> (serr));
 	} else {
-		result->Set (String::NewSymbol ("timeEquation"), Number::New (te));
+		result->Set (NanNew<String> ("timeEquation"), NanNew<Number> (te));
 	}
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -93,12 +88,11 @@ Handle <Value> node_swe_time_equ (const Arguments & args) {
  *   siderialTime: double
  * }
  */
-Handle <Value> node_swe_sidtime0 (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_sidtime0) {
+    NanScope();
 
 	if (args.Length () < 3) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -106,8 +100,7 @@ Handle <Value> node_swe_sidtime0 (const Arguments & args) {
 		!args [1]->IsNumber () ||
 		!args [2]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double st;
@@ -118,13 +111,12 @@ Handle <Value> node_swe_sidtime0 (const Arguments & args) {
 		args [2]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("siderialTime"), Number::New (st));
+	result->Set (NanNew<String> ("siderialTime"), NanNew<Number> (st));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -134,19 +126,17 @@ Handle <Value> node_swe_sidtime0 (const Arguments & args) {
  *   siderialTime: double
  * }
  */
-Handle <Value> node_swe_sidtime (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_sidtime) {
+    NanScope();
 
 	if (args.Length () < 1) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double st;
@@ -155,13 +145,12 @@ Handle <Value> node_swe_sidtime (const Arguments & args) {
 		args [0]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("siderialTime"), Number::New (st));
+	result->Set (NanNew<String> ("siderialTime"), NanNew<Number> (st));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -173,20 +162,18 @@ Handle <Value> node_swe_sidtime (const Arguments & args) {
  *   distance: double   // xpn [2]
  * }
  */
-Handle <Value> node_swe_cotrans (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_cotrans) {
+    NanScope();
 
 	if (args.Length () < 2) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsArray () ||
 		!args [1]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double xpn [3] = {0};
@@ -201,15 +188,14 @@ Handle <Value> node_swe_cotrans (const Arguments & args) {
         args [1]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("longitude"), Number::New (xpn [0]));
-	result->Set (String::NewSymbol ("latitude"), Number::New (xpn [1]));
-	result->Set (String::NewSymbol ("distance"), Number::New (xpn [2]));
+	result->Set (NanNew<String> ("longitude"), NanNew<Number> (xpn [0]));
+	result->Set (NanNew<String> ("latitude"), NanNew<Number> (xpn [1]));
+	result->Set (NanNew<String> ("distance"), NanNew<Number> (xpn [2]));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -221,20 +207,18 @@ Handle <Value> node_swe_cotrans (const Arguments & args) {
  *   distance: double
  * }
  */
-Handle <Value> node_swe_cotrans_sp (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_cotrans_sp) {
+    NanScope();
 
 	if (args.Length () < 2) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsArray () ||
 		!args [1]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double xpn [3] = {0};
@@ -249,15 +233,14 @@ Handle <Value> node_swe_cotrans_sp (const Arguments & args) {
         args [1]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("longitude"), Number::New (xpn [0]));
-	result->Set (String::NewSymbol ("latitude"), Number::New (xpn [1]));
-	result->Set (String::NewSymbol ("distance"), Number::New (xpn [2]));
+	result->Set (NanNew<String> ("longitude"), NanNew<Number> (xpn [0]));
+	result->Set (NanNew<String> ("latitude"), NanNew<Number> (xpn [1]));
+	result->Set (NanNew<String> ("distance"), NanNew<Number> (xpn [2]));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -267,20 +250,19 @@ Handle <Value> node_swe_cotrans_sp (const Arguments & args) {
  *   acceleration: double
  * }
  */
-Handle <Value> node_swe_get_tid_acc (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_get_tid_acc) {
+    NanScope();
 
 	double acceleration;
 
 	acceleration = ::swe_get_tid_acc ();
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("acceleration"), Number::New (acceleration));
+	result->Set (NanNew<String> ("acceleration"), NanNew<Number> (acceleration));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -289,30 +271,27 @@ Handle <Value> node_swe_get_tid_acc (const Arguments & args) {
  * swe_set_tid_acc(double t_acc[, function callback (result)]) = {
  * }
  */
-Handle <Value> node_swe_set_tid_acc (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_set_tid_acc) {
+    NanScope();
 
 	if (args.Length () < 1) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	::swe_set_tid_acc (
         args [0]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -322,19 +301,17 @@ Handle <Value> node_swe_set_tid_acc (const Arguments & args) {
  *   x360: double
  * }
  */
-Handle <Value> node_swe_degnorm (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_degnorm) {
+    NanScope();
 
 	if (args.Length () < 1) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double x360;
@@ -343,13 +320,12 @@ Handle <Value> node_swe_degnorm (const Arguments & args) {
 		args [0]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("x360"), Number::New (x360));
+	result->Set (NanNew<String> ("x360"), NanNew<Number> (x360));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -359,19 +335,17 @@ Handle <Value> node_swe_degnorm (const Arguments & args) {
  *   x2Pi: double
  * }
  */
-Handle <Value> node_swe_radnorm (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_radnorm) {
+    NanScope();
 
 	if (args.Length () < 1) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double x2Pi;
@@ -380,13 +354,12 @@ Handle <Value> node_swe_radnorm (const Arguments & args) {
 		args [0]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("x2Pi"), Number::New (x2Pi));
+	result->Set (NanNew<String> ("x2Pi"), NanNew<Number> (x2Pi));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -396,20 +369,18 @@ Handle <Value> node_swe_radnorm (const Arguments & args) {
  *   xMid2Pi: double
  * }
  */
-Handle <Value> node_swe_rad_midp (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_rad_midp) {
+    NanScope();
 
 	if (args.Length () < 2) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber () ||
 		!args [1]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double xMid2Pi;
@@ -419,13 +390,12 @@ Handle <Value> node_swe_rad_midp (const Arguments & args) {
 		args [1]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("xMid2Pi"), Number::New (xMid2Pi));
+	result->Set (NanNew<String> ("xMid2Pi"), NanNew<Number> (xMid2Pi));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -435,20 +405,18 @@ Handle <Value> node_swe_rad_midp (const Arguments & args) {
  *   xMid360: double
  * }
  */
-Handle <Value> node_swe_deg_midp (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_deg_midp) {
+    NanScope();
 
 	if (args.Length () < 2) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber () ||
 		!args [1]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double xMid360;
@@ -458,13 +426,12 @@ Handle <Value> node_swe_deg_midp (const Arguments & args) {
 		args [1]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("xMid360"), Number::New (xMid360));
+	result->Set (NanNew<String> ("xMid360"), NanNew<Number> (xMid360));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -478,20 +445,18 @@ Handle <Value> node_swe_deg_midp (const Arguments & args) {
  *   sign: int
  * }
  */
-Handle <Value> node_swe_split_deg (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_split_deg) {
+    NanScope();
 
 	if (args.Length () < 2) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber () ||
 		!args [1]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	int ideg;
@@ -506,17 +471,16 @@ Handle <Value> node_swe_split_deg (const Arguments & args) {
 		&ideg, &imin, &isec, &dsecfr, &isgn
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("degree"), Number::New (ideg));
-	result->Set (String::NewSymbol ("min"), Number::New (imin));
-	result->Set (String::NewSymbol ("second"), Number::New (isec));
-	result->Set (String::NewSymbol ("secondFraction"), Number::New (dsecfr));
-	result->Set (String::NewSymbol ("sign"), Number::New (isgn));
+	result->Set (NanNew<String> ("degree"), NanNew<Number> (ideg));
+	result->Set (NanNew<String> ("min"), NanNew<Number> (imin));
+	result->Set (NanNew<String> ("second"), NanNew<Number> (isec));
+	result->Set (NanNew<String> ("secondFraction"), NanNew<Number> (dsecfr));
+	result->Set (NanNew<String> ("sign"), NanNew<Number> (isgn));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -526,19 +490,17 @@ Handle <Value> node_swe_split_deg (const Arguments & args) {
  *   centisec360: double
  * }
  */
-Handle <Value> node_swe_csnorm (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_csnorm) {
+    NanScope();
 
 	if (args.Length () < 1) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	int centisec360;
@@ -547,13 +509,12 @@ Handle <Value> node_swe_csnorm (const Arguments & args) {
 		(int)args [0]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("centisec360"), Number::New (centisec360));
+	result->Set (NanNew<String> ("centisec360"), NanNew<Number> (centisec360));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -563,20 +524,18 @@ Handle <Value> node_swe_csnorm (const Arguments & args) {
  *   centisecDiff: double
  * }
  */
-Handle <Value> node_swe_difcsn  (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_difcsn ) {
+    NanScope();
 
 	if (args.Length () < 2) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber () ||
 		!args [1]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	int centisecDiff;
@@ -586,13 +545,12 @@ Handle <Value> node_swe_difcsn  (const Arguments & args) {
 		(int)args [1]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("centisecDiff"), Number::New (centisecDiff));
+	result->Set (NanNew<String> ("centisecDiff"), NanNew<Number> (centisecDiff));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -602,20 +560,18 @@ Handle <Value> node_swe_difcsn  (const Arguments & args) {
  *   degreeDiff: double
  * }
  */
-Handle <Value> node_swe_difdegn  (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_difdegn ) {
+    NanScope();
 
 	if (args.Length () < 2) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber () ||
 		!args [1]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double degreeDiff;
@@ -625,13 +581,12 @@ Handle <Value> node_swe_difdegn  (const Arguments & args) {
 		args [1]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("degreeDiff"), Number::New (degreeDiff));
+	result->Set (NanNew<String> ("degreeDiff"), NanNew<Number> (degreeDiff));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -641,20 +596,18 @@ Handle <Value> node_swe_difdegn  (const Arguments & args) {
  *   centisecDistance180: double
  * }
  */
-Handle <Value> node_swe_difcs2n (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_difcs2n) {
+    NanScope();
 
 	if (args.Length () < 2) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber () ||
 		!args [1]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	int centisecDistance180;
@@ -664,13 +617,12 @@ Handle <Value> node_swe_difcs2n (const Arguments & args) {
 		(int)args [1]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("centisecDistance180"), Number::New (centisecDistance180));
+	result->Set (NanNew<String> ("centisecDistance180"), NanNew<Number> (centisecDistance180));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -680,20 +632,18 @@ Handle <Value> node_swe_difcs2n (const Arguments & args) {
  *   degreeDistance180: double
  * }
  */
-Handle <Value> node_swe_difdeg2n (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_difdeg2n) {
+    NanScope();
 
 	if (args.Length () < 2) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber () ||
 		!args [1]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double degreeDistance180;
@@ -703,13 +653,12 @@ Handle <Value> node_swe_difdeg2n (const Arguments & args) {
 		args [1]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("degreeDistance180"), Number::New (degreeDistance180));
+	result->Set (NanNew<String> ("degreeDistance180"), NanNew<Number> (degreeDistance180));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -719,20 +668,18 @@ Handle <Value> node_swe_difdeg2n (const Arguments & args) {
  *   degreeDistancePi: double
  * }
  */
-Handle <Value> node_swe_difrad2n (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_difrad2n) {
+    NanScope();
 
 	if (args.Length () < 2) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber () ||
 		!args [1]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	double degreeDistancePi;
@@ -742,13 +689,12 @@ Handle <Value> node_swe_difrad2n (const Arguments & args) {
 		args [1]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("degreeDistancePi"), Number::New (degreeDistancePi));
+	result->Set (NanNew<String> ("degreeDistancePi"), NanNew<Number> (degreeDistancePi));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -758,19 +704,17 @@ Handle <Value> node_swe_difrad2n (const Arguments & args) {
  *   centisecRound: double
  * }
  */
-Handle <Value> node_swe_csroundsec (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_csroundsec) {
+    NanScope();
 
 	if (args.Length () < 1) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	int centisecRound;
@@ -779,13 +723,12 @@ Handle <Value> node_swe_csroundsec (const Arguments & args) {
 		(int)args [0]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("centisecRound"), Number::New (centisecRound));
+	result->Set (NanNew<String> ("centisecRound"), NanNew<Number> (centisecRound));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -795,19 +738,17 @@ Handle <Value> node_swe_csroundsec (const Arguments & args) {
  *   xRound: int
  * }
  */
-Handle <Value> node_swe_d2l (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_d2l) {
+    NanScope();
 
 	if (args.Length () < 1) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	int xRound;
@@ -816,13 +757,12 @@ Handle <Value> node_swe_d2l (const Arguments & args) {
 		args [0]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("xRound"), Number::New (xRound));
+	result->Set (NanNew<String> ("xRound"), NanNew<Number> (xRound));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -832,19 +772,17 @@ Handle <Value> node_swe_d2l (const Arguments & args) {
  *   dayOfWeek: int
  * }
  */
-Handle <Value> node_swe_day_of_week (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_day_of_week) {
+    NanScope();
 
 	if (args.Length () < 1) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	int dayOfWeek;
@@ -853,13 +791,12 @@ Handle <Value> node_swe_day_of_week (const Arguments & args) {
 		args [0]->NumberValue ()
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("dayOfWeek"), Number::New (dayOfWeek));
+	result->Set (NanNew<String> ("dayOfWeek"), NanNew<Number> (dayOfWeek));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -869,12 +806,11 @@ Handle <Value> node_swe_day_of_week (const Arguments & args) {
  *   timeString: string
  * }
  */
-Handle <Value> node_swe_cs2timestr (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_cs2timestr) {
+    NanScope();
 
 	if (args.Length () < 3) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -882,8 +818,7 @@ Handle <Value> node_swe_cs2timestr (const Arguments & args) {
 		!args [1]->IsNumber () ||
 		!args [2]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	char timeString [AS_MAXCH] = {0};
@@ -895,13 +830,12 @@ Handle <Value> node_swe_cs2timestr (const Arguments & args) {
 		timeString
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("timeString"), String::New (timeString));
+	result->Set (NanNew<String> ("timeString"), NanNew<String> (timeString));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -911,12 +845,11 @@ Handle <Value> node_swe_cs2timestr (const Arguments & args) {
  *   lonlatString: string
  * }
  */
-Handle <Value> node_swe_cs2lonlatstr (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_cs2lonlatstr) {
+    NanScope();
 
 	if (args.Length () < 3) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
@@ -924,26 +857,24 @@ Handle <Value> node_swe_cs2lonlatstr (const Arguments & args) {
 		!args [1]->IsString () ||
 		!args [2]->IsString ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	char lonlatString [AS_MAXCH] = {0};
 
 	::swe_cs2lonlatstr (
 		(int)args [0]->NumberValue (),
-		(* String::AsciiValue (args [1]->ToString ())) [0],
-		(* String::AsciiValue (args [2]->ToString ())) [0],
+		(* NanAsciiString (args [1]->ToString ())) [0],
+		(* NanAsciiString (args [2]->ToString ())) [0],
 		lonlatString
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("lonlatString"), String::New (lonlatString));
+	result->Set (NanNew<String> ("lonlatString"), NanNew<String> (lonlatString));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
 
 /**
@@ -953,19 +884,17 @@ Handle <Value> node_swe_cs2lonlatstr (const Arguments & args) {
  *   degreeString: string
  * }
  */
-Handle <Value> node_swe_cs2degstr (const Arguments & args) {
-	HandleScope scope;
+NAN_METHOD(node_swe_cs2degstr) {
+    NanScope();
 
 	if (args.Length () < 1) {
-		ThrowException (Exception::TypeError (String::New ("Wrong number of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong number of arguments");
 	};
 
 	if (
 		!args [0]->IsNumber ()
 	) {
-		ThrowException (Exception::TypeError (String::New ("Wrong type of arguments")));
-		return scope.Close (Undefined ());
+		NanThrowTypeError ("Wrong type of arguments");
 	};
 
 	char degreeString [AS_MAXCH] = {0};
@@ -975,11 +904,10 @@ Handle <Value> node_swe_cs2degstr (const Arguments & args) {
 		degreeString
 	);
 
-	Local <Object> result = Object::New ();
+	Local <Object> result = NanNew<Object> ();
 
-	result->Set (String::NewSymbol ("degreeString"), String::New (degreeString));
+	result->Set (NanNew<String> ("degreeString"), NanNew<String> (degreeString));
 
     HandleCallback (args, result);
-
-	return scope.Close (result);
+	NanReturnValue (result);
 };
